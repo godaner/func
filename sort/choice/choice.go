@@ -1,5 +1,5 @@
 package choice
-
+// Choice
 func Choice(nums []int) (res []int) {
 	for i:=0;i<len(nums)-1;i++{
 		minP:=i
