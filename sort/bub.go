@@ -1,4 +1,4 @@
-package bub
+package sort
 
 // Bub
 func Bub(nums []int) (res []int) {
@@ -10,10 +10,4 @@ func Bub(nums []int) (res []int) {
 		}
 	}
 	return nums
-}
-// swap
-func swap(a, b *int) {
-	t := *a
-	*a = *b
-	*b = t
 }

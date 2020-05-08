@@ -1,8 +1,11 @@
-package bub
+package sort
 
-import (
-	"testing"
-)
+// swap
+func swap(a, b *int) {
+	t := *a
+	*a = *b
+	*b = t
+}
 
 // compare
 // 1 : a > b
@@ -10,9 +13,20 @@ import (
 // -1 : a < b
 type compare func(a, b interface{}) (res int)
 
-func TestBub(t *testing.T) {
-	// compare
-	intsCompare := func(a, b interface{}) (res int) {
+var intsCompare compare
+
+// testCase
+type testCase struct {
+	src  []int
+	res  []int
+	comp compare
+}
+
+var testCases []testCase
+
+func init() {
+	// intsCompare
+	intsCompare = func(a, b interface{}) (res int) {
 		ai, _ := a.([]int)
 		bi, _ := b.([]int)
 		if len(ai) != len(bi) {
@@ -25,12 +39,11 @@ func TestBub(t *testing.T) {
 		}
 		return 0
 	}
+
 	// testCases
-	testCases := []struct {
-		src  []int
-		res  []int
-		comp compare
-	}{
+
+	// testCases
+	testCases = []testCase{
 		{
 			src:  []int{88, 1, 55, 45, 4546, 564, 68, 13, 1, 3654, 896},
 			res:  []int{1, 1, 13, 45, 55, 68, 88, 564, 896, 3654, 4546},
@@ -46,13 +59,5 @@ func TestBub(t *testing.T) {
 			res:  []int{-1, -1, -1},
 			comp: intsCompare,
 		},
-	}
-	for i, testCase := range testCases {
-		res := Bub(testCase.src)
-		c := testCase.comp(testCase.res, res)
-		t.Logf("TestBub : testCase[%v] actually res is : %v , wanna res is : %v !", i, res, testCase.res)
-		if c != 0 {
-			t.Errorf("TestBub : testCase[%v] fail !", i)
-		}
 	}
 }

@@ -1,4 +1,4 @@
-package insert
+package sort
 
 // Insert
 func Insert(nums []int) (res []int) {

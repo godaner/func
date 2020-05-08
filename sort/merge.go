@@ -1,4 +1,4 @@
-package merge
+package sort
 
 // Merge
 func Merge(nums []int) (res []int) {

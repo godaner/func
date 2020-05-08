@@ -1,4 +1,4 @@
-package choice
+package sort
 // Choice
 func Choice(nums []int) (res []int) {
 	for i:=0;i<len(nums)-1;i++{
@@ -11,10 +11,4 @@ func Choice(nums []int) (res []int) {
 		swap(&nums[minP],&nums[i])
 	}
 	return nums
-}
-// swap
-func swap(a, b *int) {
-	t := *a
-	*a = *b
-	*b = t
 }

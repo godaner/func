@@ -1,4 +1,4 @@
-package shell
+package sort
 
 // Shell
 func Shell(nums []int, dk int) (res []int) {
