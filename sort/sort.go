@@ -76,7 +76,7 @@ func init() {
 		}
 		testCases = append(testCases, testCase{
 			src:  arr,
-			res:  Quick(arr),
+			res:  Shell(arr,len(arr)/2),
 			comp: intsCompare,
 		})
 	}
