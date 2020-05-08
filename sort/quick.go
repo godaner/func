@@ -21,23 +21,24 @@ func sort(nums *[]int, low, high int) (keyIndex int) {
 	ken := (*nums)[low]
 	i := low
 	j := high
-	for i >= high || j <= low || j <= i {
-		for {
-			if (*nums)[j] < ken {
-				(*nums)[i] = (*nums)[j]
+	for j > i {
+		for j > i {
+			if (*nums)[j] >= ken {
 				j--
-				break
+				continue
 			}
+			(*nums)[i] = (*nums)[j]
+			break
 		}
-		for {
-			if (*nums)[i] > ken {
-				(*nums)[j] = (*nums)[i]
+		for j > i {
+			if (*nums)[i] <= ken {
 				i++
-				break
+				continue
 			}
+			(*nums)[j] = (*nums)[i]
+			break
 		}
 	}
 	(*nums)[i] = ken
 	return i
 }
-
