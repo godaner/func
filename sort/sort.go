@@ -1,11 +1,15 @@
 package sort
 
-// swap
-func swap(a, b *int) {
-	t := *a
-	*a = *b
-	*b = t
-}
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+const (
+	randomTestCaseNum    = 1
+	randomTestCaseArrLen = 50000
+)
 
 // compare
 // 1 : a > b
@@ -20,6 +24,10 @@ type testCase struct {
 	src  []int
 	res  []int
 	comp compare
+}
+
+func (tc *testCase) String() string {
+	return "src is : " + fmt.Sprint(tc.src) + " , res is : " + fmt.Sprint(tc.res)
 }
 
 var testCases []testCase
@@ -60,4 +68,24 @@ func init() {
 			comp: intsCompare,
 		},
 	}
+	for i := 0; i < randomTestCaseNum; i++ {
+		arr := []int{}
+		for i := 0; i < randomTestCaseArrLen; i++ {
+			rand.Seed(time.Now().UnixNano())
+			arr = append(arr, rand.Int())
+		}
+		testCases = append(testCases, testCase{
+			src:  arr,
+			res:  Merge(arr),
+			comp: intsCompare,
+		})
+	}
 }
+
+// swap
+func swap(a, b *int) {
+	t := *a
+	*a = *b
+	*b = t
+}
+
