@@ -1,5 +1,5 @@
 package sort
-
+// Heap
 func Heap(nums []int) (res []int) {
 	arrLen := len(nums)
 	for i := 0; i < len(nums); i++ {
@@ -33,7 +33,7 @@ func oneMaxHeap(nums *[]int, nodeIndex, arrLen int) {
 	// 从子节点找到了新的最大数
 	if maxNumberIndex != nodeIndex {
 		swap(&((*nums)[maxNumberIndex]), &((*nums)[nodeIndex]))
-		oneMaxHeap(nums, maxNumberIndex, arrLen)
+		//oneMaxHeap(nums, maxNumberIndex, arrLen)
 	}
 }
 
