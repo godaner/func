@@ -7,8 +7,9 @@ import (
 )
 
 const (
-	randomTestCaseNum    = 1
-	randomTestCaseArrLen = 50000
+	randomTestCaseNum       = 1
+	randomTestCaseArrLen    = 50000
+	randomTestCaseMaxNumber = 100000000
 )
 
 // compare
@@ -72,11 +73,11 @@ func init() {
 		arr := []int{}
 		for i := 0; i < randomTestCaseArrLen; i++ {
 			rand.Seed(time.Now().UnixNano())
-			arr = append(arr, rand.Int())
+			arr = append(arr, rand.Intn(randomTestCaseMaxNumber))
 		}
 		testCases = append(testCases, testCase{
 			src:  arr,
-			res:  Shell(arr,len(arr)/2),
+			res:  Shell(arr, len(arr)/2),
 			comp: intsCompare,
 		})
 	}
@@ -88,4 +89,3 @@ func swap(a, b *int) {
 	*a = *b
 	*b = t
 }
-
