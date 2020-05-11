@@ -15,8 +15,8 @@ func Heap(nums []int) (res []int) {
 	}
 	return nums
 }
-
-// 构建大根堆
+// buildMaxHeap
+//  构建大根堆
 func buildMaxHeap(nums *[]int) {
 	arrLen := len(*nums)
 	//　从最底层开始构建大根堆
@@ -24,26 +24,26 @@ func buildMaxHeap(nums *[]int) {
 		adjustHeap(nums, nodeIndex, arrLen)
 	}
 }
-
-//  寻找和处理某个节点在其子树大根堆的位置
+// adjustHeap
+//  寻找某一个指定节点在大根堆的位置
+//  即与起子节点比较大小，小于子节点，那么沉降，再利用递归的方式继续和子孙节点比较
 //  nodeIndex:待处理节点索引
 //  arrLen:总结点数，待处理的节点最大比较范围
 func adjustHeap(nums *[]int, nodeIndex, arrLen int) {
 	if nodeIndex >= arrLen {
 		return
 	}
-	// 寻找待处理节点的子节点
+	// 寻找当前节点，左子节点，右子节点三者中最大者的索引
 	leftChildIndex := 2*nodeIndex + 1
 	rightChildIndex := 2*nodeIndex + 2
 	maxNumberIndex := nodeIndex
-	// 寻找是否存在比起大的节点
 	if leftChildIndex < arrLen {
 		maxNumberIndex = maxIndex(*nums, maxNumberIndex, leftChildIndex)
 	}
 	if rightChildIndex < arrLen {
 		maxNumberIndex = maxIndex(*nums, maxNumberIndex, rightChildIndex)
 	}
-	// 如果存在比其大的节点，需要交换节点，并且递归向下比较
+	// 如果当前节点小于其子节点，需要与子节点交换位置；并且递归向下比较当前节点是否比子孙节点小？
 	if maxNumberIndex != nodeIndex {
 		swap(&((*nums)[maxNumberIndex]), &((*nums)[nodeIndex]))
 		// 递归向下比较
