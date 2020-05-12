@@ -34,6 +34,7 @@ func (tc *testCase) String() string {
 var testCases []testCase
 
 func init() {
+
 	// intsCompare
 	intsCompare = func(a, b interface{}) (res int) {
 		ai, _ := a.([]int)
@@ -48,8 +49,6 @@ func init() {
 		}
 		return 0
 	}
-
-	// testCases
 
 	// testCases
 	testCases = []testCase{
@@ -69,13 +68,18 @@ func init() {
 			comp: intsCompare,
 		},
 	}
-	for i := 0; i < randomTestCaseNum; i++ {
+	appendRandom(&testCases, randomTestCaseMaxNumber, randomTestCaseNum, randomTestCaseArrLen)
+}
+
+// appendRandom
+func appendRandom(testCases *[]testCase, max, num, l int) {
+	for i := 0; i < num; i++ {
 		arr := []int{}
-		for i := 0; i < randomTestCaseArrLen; i++ {
+		for i := 0; i < l; i++ {
 			rand.Seed(time.Now().UnixNano())
-			arr = append(arr, rand.Intn(randomTestCaseMaxNumber))
+			arr = append(arr, rand.Intn(max))
 		}
-		testCases = append(testCases, testCase{
+		*testCases = append(*testCases, testCase{
 			src:  arr,
 			res:  Shell(arr, len(arr)/2),
 			comp: intsCompare,
@@ -89,7 +93,6 @@ func swap(a, b *int) {
 	*a = *b
 	*b = t
 }
-
 
 // maxNumber
 func maxNumber(nums []int) (maxN int) {

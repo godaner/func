@@ -5,6 +5,8 @@ import (
 )
 
 func TestBucket(t *testing.T) {
+	testCases=[]testCase{}
+	appendRandom(&testCases, randomTestCaseMaxNumber, randomTestCaseNum, randomTestCaseArrLen)
 	for i, testCase := range testCases {
 		res := Bucket(testCase.src,10)
 		c := testCase.comp(testCase.res, res)
