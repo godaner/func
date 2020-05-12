@@ -89,3 +89,24 @@ func swap(a, b *int) {
 	*a = *b
 	*b = t
 }
+
+
+// maxNumber
+func maxNumber(nums []int) (maxN int) {
+	for _, num := range nums {
+		if num > maxN {
+			maxN = num
+		}
+	}
+	return maxN
+}
+
+// minNumber
+func minNumber(nums []int) (minN int) {
+	for _, num := range nums {
+		if num < minN {
+			minN = num
+		}
+	}
+	return minN
+}
