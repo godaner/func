@@ -27,6 +27,8 @@ func Bucket(nums []int, bucketSize int) (res []int) {
 	}
 	return res
 }
+
+// BucketV2
 func BucketV2(nums []int, bucketSize int) (res []int) {
 	maxN := maxNumber(nums)
 	minN := minNumber(nums)

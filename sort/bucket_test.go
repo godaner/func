@@ -5,10 +5,10 @@ import (
 )
 
 func TestBucket(t *testing.T) {
-	testCases=[]testCase{}
-	appendRandom(&testCases, randomTestCaseMaxNumber, randomTestCaseNum, randomTestCaseArrLen)
+	testCases := make([]testCase, 0)
+	initRandomTestCases(&testCases, randomTestCaseNum, randomTestCaseMaxNumber, randomTestCaseArrLen)
 	for i, testCase := range testCases {
-		res := Bucket(testCase.src,10)
+		res := Bucket(testCase.src, 10)
 		c := testCase.comp(testCase.res, res)
 		//t.Logf("TestBucket : testCase[%v] actually res is : %v , wanna res is : %v !", i, res, testCase.res)
 		if c != 0 {
@@ -18,10 +18,10 @@ func TestBucket(t *testing.T) {
 	}
 }
 func TestBucketV2(t *testing.T) {
-	testCases=[]testCase{}
-	appendRandom(&testCases, randomTestCaseMaxNumber, randomTestCaseNum, randomTestCaseArrLen)
+	testCases := make([]testCase, 0)
+	initRandomTestCases(&testCases, randomTestCaseNum, randomTestCaseMaxNumber, randomTestCaseArrLen)
 	for i, testCase := range testCases {
-		res := BucketV2(testCase.src,10)
+		res := BucketV2(testCase.src, 10)
 		c := testCase.comp(testCase.res, res)
 		//t.Logf("TestBucketV2 : testCase[%v] actually res is : %v , wanna res is : %v !", i, res, testCase.res)
 		if c != 0 {

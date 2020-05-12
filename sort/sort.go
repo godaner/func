@@ -53,6 +53,21 @@ func init() {
 	// testCases
 	testCases = []testCase{
 		{
+			src:  []int{-250, -9999, -1, 0, 100, 200},
+			res:  []int{-9999, -250, -1, 0, 100, 200},
+			comp: intsCompare,
+		},
+		{
+			src:  []int{-1, 0, -1},
+			res:  []int{-1, -1, 0},
+			comp: intsCompare,
+		},
+		{
+			src:  []int{-0, 0, 0},
+			res:  []int{-0, 0, 0},
+			comp: intsCompare,
+		},
+		{
 			src:  []int{88, 1, 55, 45, 4546, 564, 68, 13, 1, 3654, 896},
 			res:  []int{1, 1, 13, 45, 55, 68, 88, 564, 896, 3654, 4546},
 			comp: intsCompare,
@@ -68,11 +83,11 @@ func init() {
 			comp: intsCompare,
 		},
 	}
-	appendRandom(&testCases, randomTestCaseMaxNumber, randomTestCaseNum, randomTestCaseArrLen)
+	initRandomTestCases(&testCases, randomTestCaseNum, randomTestCaseMaxNumber, randomTestCaseArrLen)
 }
 
-// appendRandom
-func appendRandom(testCases *[]testCase, max, num, l int) {
+// initRandomTestCases
+func initRandomTestCases(testCases *[]testCase, num, max, l int) {
 	for i := 0; i < num; i++ {
 		arr := []int{}
 		for i := 0; i < l; i++ {
