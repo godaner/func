@@ -35,7 +35,7 @@ func (t *Tree) BFS() (n []int) {
 	return n
 }
 
-// Depth
+// MaxDepth
 //  树的最大深度
 func (t *Tree) MaxDepth() (maxDep int) {
 	curDep := 0

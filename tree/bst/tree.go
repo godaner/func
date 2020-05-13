@@ -5,6 +5,19 @@ type Tree struct {
 	Left, Right *Tree
 	Date        int
 }
+
+func (t *Tree) MaxDepth() (maxDep int) {
+	panic("implement me")
+}
+
+func (t *Tree) Min() (minN int) {
+	panic("implement me")
+}
+
+func (t *Tree) Max() (maxN int) {
+	panic("implement me")
+}
+
 // Find
 func (t *Tree) Find(data int) (exits bool) {
 	find(t, data, &exits)
