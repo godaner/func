@@ -38,7 +38,7 @@ func TestTree_Pre(t *testing.T) {
 		},
 	}
 	for i, testCase := range testCases {
-		tree := Build(testCase.preSrc)
+		tree := BuildFromPre(testCase.preSrc)
 		actuallyPreRes := tree.Pre()
 		c := testCase.comp(testCase.wannaRes, actuallyPreRes)
 		if c != 0 {
@@ -70,7 +70,7 @@ func TestTree_Mid(t *testing.T) {
 		},
 	}
 	for i, testCase := range testCases {
-		tree := Build(testCase.preSrc)
+		tree := BuildFromPre(testCase.preSrc)
 		actuallyPreRes := tree.Mid()
 		c := testCase.comp(testCase.wannaRes, actuallyPreRes)
 		if c != 0 {
@@ -103,7 +103,7 @@ func TestTree_Post(t *testing.T) {
 		},
 	}
 	for i, testCase := range testCases {
-		tree := Build(testCase.preSrc)
+		tree := BuildFromPre(testCase.preSrc)
 		actuallyPreRes := tree.Post()
 		c := testCase.comp(testCase.wannaRes, actuallyPreRes)
 		if c != 0 {
@@ -134,7 +134,7 @@ func TestTree_Max(t *testing.T) {
 		},
 	}
 	for i, testCase := range testCases {
-		tree := Build(testCase.preSrc)
+		tree := BuildFromPre(testCase.preSrc)
 		actuallyRes := tree.Max()
 		c := testCase.comp(testCase.wannaRes, actuallyRes)
 		if c != 0 {
@@ -165,7 +165,7 @@ func TestTree_Min(t *testing.T) {
 		},
 	}
 	for i, testCase := range testCases {
-		tree := Build(testCase.preSrc)
+		tree := BuildFromPre(testCase.preSrc)
 		actuallyRes := tree.Min()
 		c := testCase.comp(testCase.wannaRes, actuallyRes)
 		if c != 0 {
@@ -205,7 +205,7 @@ func TestTree_Find(t *testing.T) {
 		},
 	}
 	for i, testCase := range testCases {
-		tree := Build(testCase.preSrc)
+		tree := BuildFromPre(testCase.preSrc)
 		actuallyRes := tree.Find(testCase.wannaFindDate)
 		c := testCase.comp(testCase.wannaRes, actuallyRes)
 		if c != 0 {
@@ -235,11 +235,85 @@ func TestTree_MaxDepth(t *testing.T) {
 		},
 	}
 	for i, testCase := range testCases {
-		tree := Build(testCase.preSrc)
+		tree := BuildFromPre(testCase.preSrc)
 		actuallyRes := tree.MaxDepth()
 		c := testCase.comp(testCase.wannaRes, actuallyRes)
 		if c != 0 {
 			t.Fatalf("TestTree_MaxDepth : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+		}
+	}
+}
+
+func TestBuildFromPre(t *testing.T) {
+	c := func(a, b interface{}) (res int) {
+		ai, _ := a.([]int)
+		bi, _ := b.([]int)
+		if len(ai) != len(bi) {
+			return -1
+		}
+		for i, ain := range ai {
+			if bi[i] != ain {
+				return -1
+			}
+		}
+		return 0
+	}
+	testCases := []struct {
+		preSrc   []*int
+		midSrc   []int
+		wannaRes []int
+		comp     compare
+	}{
+		{
+			preSrc:   []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
+			midSrc:   []int{7, 3, 8, 1, 4, 0, 5, 9, 2, 6},
+			wannaRes: []int{7, 8, 3, 4, 1, 9, 5, 6, 2, 0},
+			comp:     c,
+		},
+	}
+	for i, testCase := range testCases {
+		tree := BuildFromPre(testCase.preSrc)
+		actuallyRes := tree.Post()
+		c := testCase.comp(testCase.wannaRes, actuallyRes)
+		if c != 0 {
+			t.Fatalf("TestBuildFromPreMid : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+		}
+	}
+}
+
+func TestBuildFromPreMid(t *testing.T) {
+	c := func(a, b interface{}) (res int) {
+		ai, _ := a.([]int)
+		bi, _ := b.([]int)
+		if len(ai) != len(bi) {
+			return -1
+		}
+		for i, ain := range ai {
+			if bi[i] != ain {
+				return -1
+			}
+		}
+		return 0
+	}
+	testCases := []struct {
+		preSrc   []int
+		midSrc   []int
+		wannaRes []int
+		comp     compare
+	}{
+		{
+			preSrc:   []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
+			midSrc:   []int{7, 3, 8, 1, 4, 0, 5, 9, 2, 6},
+			wannaRes: []int{7, 8, 3, 4, 1, 9, 5, 6, 2, 0},
+			comp:     c,
+		},
+	}
+	for i, testCase := range testCases {
+		tree := BuildFromPreMid(testCase.preSrc, testCase.midSrc)
+		actuallyRes := tree.Post()
+		c := testCase.comp(testCase.wannaRes, actuallyRes)
+		if c != 0 {
+			t.Fatalf("TestBuildFromPreMid : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
 	}
 }

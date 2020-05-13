@@ -142,18 +142,45 @@ func post(root *Tree, p *[]int) {
 
 }
 
-// Build
-//  通过前序遍历建立二叉树
-//  ABDH##I##E##CF#J##G##
-func Build(nodes []*int) (t *Tree) {
-	i := -1 // 第几次输入
-	return build(nodes, &i)
+// BuildFromPreMid
+//  通过先序中序遍历建立二叉树
+//  pre  [0 1 3 7 8 4 2 5 9 6]
+//  mid  [7 3 8 1 4 0 5 9 2 6]
+//  post [7 8 3 4 1 9 5 6 2 0]
+func BuildFromPreMid(pre []int, mid []int) (t *Tree) {
+	if len(pre) == 0 || len(mid) == 0 {
+		return nil
+	}
+	d := pre[0]
+	dp := pos(mid, d)
+	root := newTreeNode(d)
+	root.Left = BuildFromPreMid(pre[1:dp+1], mid[:dp])
+	root.Right = BuildFromPreMid(pre[dp+1:], mid[dp+1:])
+	return root
 }
 
-// build
+// pos
+func pos(nums []int, num int) (p int) {
+	for index, n := range nums {
+		if num == n {
+			return index
+		}
+	}
+	return p
+}
+
+// BuildFromPre
+//  通过前序遍历建立二叉树
+//  ABDH##I##E##CF#J##G##
+func BuildFromPre(nodes []*int) (t *Tree) {
+	i := -1 // 第几次输入
+	return buildFromPre(nodes, &i)
+}
+
+// buildFromPre
 //  nodes　总的输入
 //  i　第几次输入
-func build(nodes []*int, i *int) (t *Tree) {
+func buildFromPre(nodes []*int, i *int) (t *Tree) {
 	l := len(nodes)
 	if l == 0 || l < *i {
 		return nil
@@ -163,17 +190,17 @@ func build(nodes []*int, i *int) (t *Tree) {
 	if data == nil {
 		return nil
 	}
-	node := newTreeNode(data)
-	node.Left = build(nodes, i)
-	node.Right = build(nodes, i)
+	node := newTreeNode(*data)
+	node.Left = buildFromPre(nodes, i)
+	node.Right = buildFromPre(nodes, i)
 	return node
 }
 
 // newTreeNode
-func newTreeNode(data *int) (tn *Tree) {
+func newTreeNode(data int) (tn *Tree) {
 	return &Tree{
 		Left:  nil,
 		Right: nil,
-		Date:  *data,
+		Date:  data,
 	}
 }
