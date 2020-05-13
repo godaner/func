@@ -52,3 +52,41 @@ func TestBuild(t *testing.T) {
 		}
 	}
 }
+
+func TestTree_Find(t *testing.T) {
+	c := func(a, b interface{}) (res int) {
+		ai, _ := a.(bool)
+		bi, _ := b.(bool)
+		if ai == bi {
+			return 0
+		}
+		return -1
+	}
+	testCases := []struct {
+		src      []int
+		wannaRes      bool
+		wannaFindDate int
+		comp          compare
+	}{
+		{
+			src:      []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
+			wannaFindDate: 8,
+			wannaRes:      true,
+			comp:          c,
+		},
+		{
+			src:      []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
+			wannaFindDate: -1,
+			wannaRes:      false,
+			comp:          c,
+		},
+	}
+	for i, testCase := range testCases {
+		tree := Build(testCase.src)
+		actuallyRes := tree.Find(testCase.wannaFindDate)
+		c := testCase.comp(testCase.wannaRes, actuallyRes)
+		if c != 0 {
+			t.Fatalf("TestTree_Find : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+		}
+	}
+}

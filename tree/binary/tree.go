@@ -54,7 +54,7 @@ func depth(root *Tree, curDep int, maxDep *int) {
 	depth(root.Left, curDep, maxDep)
 }
 
-// Min
+// Find
 func (t *Tree) Find(data int) (exits bool) {
 	find(t, data, &exits)
 	return exits

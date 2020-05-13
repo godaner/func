@@ -5,7 +5,28 @@ type Tree struct {
 	Left, Right *Tree
 	Date        int
 }
-
+// Find
+func (t *Tree) Find(data int) (exits bool) {
+	find(t, data, &exits)
+	return exits
+}
+func find(root *Tree, data int, exits *bool) {
+	if root == nil {
+		return
+	}
+	if (*exits) == true {
+		return
+	}
+	if data == root.Date {
+		*exits = true
+		return
+	}
+	if data<=root.Date{
+		find(root.Left, data, exits)
+	}else{
+		find(root.Right, data, exits)
+	}
+}
 // Add
 func (t *Tree) Add(data int) {
 	if t == nil {
