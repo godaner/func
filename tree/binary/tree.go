@@ -1,5 +1,7 @@
 package binary
 
+import "container/list"
+
 // Tree
 type Tree struct {
 	Left, Right *Tree
@@ -9,7 +11,27 @@ type Tree struct {
 // BFS
 //  广度优先遍历
 func (t *Tree) BFS() (n []int) {
+	if t == nil {
+		return
+	}
+	queue := list.New()
+	queue.PushBack(t)
+	for queue.Len() > 0 {
+		// get father
+		val:=queue.Front()
+		queue.Remove(val)
 
+		node := val.Value.(*Tree)
+		n = append(n, node.Date)
+
+		//put child
+		if node.Left!=nil{
+			queue.PushBack(node.Left)
+		}
+		if node.Right!=nil{
+			queue.PushBack(node.Right)
+		}
+	}
 	return n
 }
 

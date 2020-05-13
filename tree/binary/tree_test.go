@@ -315,3 +315,39 @@ func TestBuildFromPreMid(t *testing.T) {
 		}
 	}
 }
+
+func TestTree_BFS(t *testing.T) {
+	c := func(a, b interface{}) (res int) {
+		ai, _ := a.([]int)
+		bi, _ := b.([]int)
+		if len(ai) != len(bi) {
+			return -1
+		}
+		for i, ain := range ai {
+			if bi[i] != ain {
+				return -1
+			}
+		}
+		return 0
+	}
+	testCases := []struct {
+		preSrc   []*int
+		wannaRes []int
+		comp     compare
+	}{
+		{
+			preSrc: []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
+			//"HIDEBJFGCA"
+			wannaRes: []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+			comp:     c,
+		},
+	}
+	for i, testCase := range testCases {
+		tree := BuildFromPre(testCase.preSrc)
+		actuallyRes := tree.BFS()
+		c := testCase.comp(testCase.wannaRes, actuallyRes)
+		if c != 0 {
+			t.Fatalf("TestTree_Min : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+		}
+	}
+}
