@@ -259,24 +259,22 @@ func TestBuildFromPre(t *testing.T) {
 		return 0
 	}
 	testCases := []struct {
-		preSrc   []*int
-		midSrc   []int
-		wannaRes []int
-		comp     compare
+		preSrc      []*int
+		wannaMidRes []int
+		comp        compare
 	}{
 		{
-			preSrc:   []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
-			midSrc:   []int{7, 3, 8, 1, 4, 0, 5, 9, 2, 6},
-			wannaRes: []int{7, 8, 3, 4, 1, 9, 5, 6, 2, 0},
-			comp:     c,
+			preSrc:      []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
+			wannaMidRes: []int{7, 3, 8, 1, 4, 0, 5, 9, 2, 6},
+			comp:        c,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := BuildFromPre(testCase.preSrc)
-		actuallyRes := tree.Post()
-		c := testCase.comp(testCase.wannaRes, actuallyRes)
+		actuallyRes := tree.Mid()
+		c := testCase.comp(testCase.wannaMidRes, actuallyRes)
 		if c != 0 {
-			t.Fatalf("TestBuildFromPreMid : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+			t.Fatalf("TestBuildFromPreMid : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaMidRes)
 		}
 	}
 }
@@ -296,24 +294,24 @@ func TestBuildFromPreMid(t *testing.T) {
 		return 0
 	}
 	testCases := []struct {
-		preSrc   []int
-		midSrc   []int
-		wannaRes []int
-		comp     compare
+		preSrc       []int
+		midSrc       []int
+		wannaPostRes []int
+		comp         compare
 	}{
 		{
-			preSrc:   []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
-			midSrc:   []int{7, 3, 8, 1, 4, 0, 5, 9, 2, 6},
-			wannaRes: []int{7, 8, 3, 4, 1, 9, 5, 6, 2, 0},
-			comp:     c,
+			preSrc:       []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
+			midSrc:       []int{7, 3, 8, 1, 4, 0, 5, 9, 2, 6},
+			wannaPostRes: []int{7, 8, 3, 4, 1, 9, 5, 6, 2, 0},
+			comp:         c,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := BuildFromPreMid(testCase.preSrc, testCase.midSrc)
 		actuallyRes := tree.Post()
-		c := testCase.comp(testCase.wannaRes, actuallyRes)
+		c := testCase.comp(testCase.wannaPostRes, actuallyRes)
 		if c != 0 {
-			t.Fatalf("TestBuildFromPreMid : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+			t.Fatalf("TestBuildFromPreMid : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaPostRes)
 		}
 	}
 }
