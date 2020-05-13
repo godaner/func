@@ -1,7 +1,6 @@
 package binary
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -13,20 +12,6 @@ type compare func(a, b interface{}) (res int)
 
 func intP(i int) (p *int) {
 	return &i
-}
-func TestW2N(t *testing.T) {
-	sss := []string{"ABDH##I##E##CF#J##G##"}
-	for index, ss := range sss {
-		fmt.Print(index, " : ")
-		for i, _ := range ss {
-			if ss[i] >= 65 {
-				fmt.Print(ss[i] - 65)
-			} else {
-				fmt.Print("#")
-			}
-		}
-
-	}
 }
 func TestTree_Pre(t *testing.T) {
 	c := func(a, b interface{}) (res int) {
@@ -55,8 +40,6 @@ func TestTree_Pre(t *testing.T) {
 	for i, testCase := range testCases {
 		tree := Build(testCase.preSrc)
 		actuallyPreRes := tree.Pre()
-		fmt.Println(tree.Mid())
-		fmt.Println(tree.Post())
 		c := testCase.comp(testCase.wannaRes, actuallyPreRes)
 		if c != 0 {
 			t.Fatalf("TestTree_Pre : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyPreRes, testCase.wannaRes)
@@ -133,7 +116,7 @@ func TestTree_Max(t *testing.T) {
 	c := func(a, b interface{}) (res int) {
 		ai, _ := a.(int)
 		bi, _ := b.(int)
-		if ai==bi{
+		if ai == bi {
 			return 0
 		}
 		return -1
@@ -164,7 +147,7 @@ func TestTree_Min(t *testing.T) {
 	c := func(a, b interface{}) (res int) {
 		ai, _ := a.(int)
 		bi, _ := b.(int)
-		if ai==bi{
+		if ai == bi {
 			return 0
 		}
 		return -1
@@ -184,6 +167,46 @@ func TestTree_Min(t *testing.T) {
 	for i, testCase := range testCases {
 		tree := Build(testCase.preSrc)
 		actuallyRes := tree.Min()
+		c := testCase.comp(testCase.wannaRes, actuallyRes)
+		if c != 0 {
+			t.Fatalf("TestTree_Min : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+		}
+	}
+}
+
+func TestTree_Find(t *testing.T) {
+	c := func(a, b interface{}) (res int) {
+		ai, _ := a.(bool)
+		bi, _ := b.(bool)
+		if ai == bi {
+			return 0
+		}
+		return -1
+	}
+	testCases := []struct {
+		preSrc        []*int
+		wannaRes      bool
+		wannaFindDate int
+		comp          compare
+	}{
+		{
+			preSrc: []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
+			//"HIDEBJFGCA"
+			wannaFindDate: 8,
+			wannaRes:      true,
+			comp:          c,
+		},
+		{
+			preSrc: []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
+			//"HIDEBJFGCA"
+			wannaFindDate: -1,
+			wannaRes:      false,
+			comp:          c,
+		},
+	}
+	for i, testCase := range testCases {
+		tree := Build(testCase.preSrc)
+		actuallyRes := tree.Find(testCase.wannaFindDate)
 		c := testCase.comp(testCase.wannaRes, actuallyRes)
 		if c != 0 {
 			t.Fatalf("TestTree_Min : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)

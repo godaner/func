@@ -78,6 +78,21 @@ func init() {
 			comp: intsCompare,
 		},
 		{
+			src:  []int{1},
+			res:  []int{1},
+			comp: intsCompare,
+		},
+		{
+			src:  []int{0},
+			res:  []int{0},
+			comp: intsCompare,
+		},
+		{
+			src:  []int{1, -1, 0},
+			res:  []int{-1, 0, 1},
+			comp: intsCompare,
+		},
+		{
 			src:  []int{-1, -1, -1},
 			res:  []int{-1, -1, -1},
 			comp: intsCompare,

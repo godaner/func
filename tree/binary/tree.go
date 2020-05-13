@@ -6,6 +6,38 @@ type Tree struct {
 	Date        int
 }
 
+// BFS
+//  广度优先遍历
+func (t *Tree) BFS() (n []int) {
+	return n
+}
+
+// Depth
+//  树的深度
+func (t *Tree) Depth() (depth int) {
+	return depth
+}
+
+// Min
+func (t *Tree) Find(data int) (exits bool) {
+	find(t, data, &exits)
+	return exits
+}
+func find(root *Tree, data int, exits *bool) {
+	if root == nil {
+		return
+	}
+	if (*exits) == true {
+		return
+	}
+	if data == root.Date {
+		*exits = true
+		return
+	}
+	find(root.Left, data, exits)
+	find(root.Right, data, exits)
+}
+
 // Min
 func (t *Tree) Min() (minN int) {
 	min(t, &minN)
