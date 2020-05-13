@@ -9,13 +9,27 @@ type Tree struct {
 // BFS
 //  广度优先遍历
 func (t *Tree) BFS() (n []int) {
+
 	return n
 }
 
 // Depth
-//  树的深度
-func (t *Tree) Depth() (depth int) {
-	return depth
+//  树的最大深度
+func (t *Tree) MaxDepth() (maxDep int) {
+	curDep := 0
+	depth(t, curDep, &maxDep)
+	return maxDep
+}
+func depth(root *Tree, curDep int, maxDep *int) {
+	if root == nil {
+		return
+	}
+	curDep++
+	if curDep > *maxDep {
+		*maxDep = curDep
+	}
+	depth(root.Left, curDep, maxDep)
+	depth(root.Left, curDep, maxDep)
 }
 
 // Min

@@ -209,7 +209,37 @@ func TestTree_Find(t *testing.T) {
 		actuallyRes := tree.Find(testCase.wannaFindDate)
 		c := testCase.comp(testCase.wannaRes, actuallyRes)
 		if c != 0 {
-			t.Fatalf("TestTree_Min : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+			t.Fatalf("TestTree_Find : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+		}
+	}
+}
+func TestTree_MaxDepth(t *testing.T) {
+	c := func(a, b interface{}) (res int) {
+		ai, _ := a.(int)
+		bi, _ := b.(int)
+		if ai == bi {
+			return 0
+		}
+		return -1
+	}
+	testCases := []struct {
+		preSrc   []*int
+		wannaRes int
+		comp     compare
+	}{
+		{
+			preSrc: []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
+			//"HIDEBJFGCA"
+			wannaRes: 4,
+			comp:     c,
+		},
+	}
+	for i, testCase := range testCases {
+		tree := Build(testCase.preSrc)
+		actuallyRes := tree.MaxDepth()
+		c := testCase.comp(testCase.wannaRes, actuallyRes)
+		if c != 0 {
+			t.Fatalf("TestTree_MaxDepth : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
 	}
 }
