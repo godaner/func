@@ -128,39 +128,49 @@ func find(root *Tree, data int) (r tree.Tree) {
 }
 
 // Min
-func (t *Tree) Min() (minN int) {
-	min(t, &minN)
-	return minN
+func (t *Tree) Min() (r tree.Tree) {
+	return min(t)
 }
 
 // min
-func min(root *Tree, minN *int) {
+func min(root *Tree) (r tree.Tree) {
 	if root == nil {
 		return
 	}
-	if root.Date < *minN {
-		*minN = root.Date
+	var minN tree.Tree
+	minN = root
+	lc := min(root.Left)
+	if lc != nil && lc.Data() < minN.Data() {
+		minN = lc
 	}
-	min(root.Left, minN)
-	min(root.Right, minN)
+	rc := min(root.Right)
+	if rc != nil && rc.Data() < minN.Data() {
+		minN = rc
+	}
+	return minN
 }
 
 // Max
-func (t *Tree) Max() (maxN int) {
-	max(t, &maxN)
-	return maxN
+func (t *Tree) Max() (r tree.Tree) {
+	return max(t)
 }
 
 // max
-func max(root *Tree, maxN *int) {
+func max(root *Tree) (r tree.Tree) {
 	if root == nil {
 		return
 	}
-	if root.Date > *maxN {
-		*maxN = root.Date
+	var maxN tree.Tree
+	maxN = root
+	lc := max(root.Left)
+	if lc != nil && lc.Data() > maxN.Data() {
+		maxN = lc
 	}
-	max(root.Left, maxN)
-	max(root.Right, maxN)
+	rc := max(root.Right)
+	if rc != nil && rc.Data() > maxN.Data() {
+		maxN = rc
+	}
+	return maxN
 }
 
 // Pre

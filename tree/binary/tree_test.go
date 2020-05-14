@@ -113,62 +113,47 @@ func TestTree_Post(t *testing.T) {
 }
 
 func TestTree_Max(t *testing.T) {
-	c := func(a, b interface{}) (res int) {
-		ai, _ := a.(int)
-		bi, _ := b.(int)
-		if ai == bi {
-			return 0
-		}
-		return -1
-	}
 	testCases := []struct {
 		preSrc   []*int
 		wannaRes int
-		comp     compare
 	}{
 		{
-			preSrc: []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
-			//"HIDEBJFGCA"
+			preSrc:   []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
 			wannaRes: 9,
-			comp:     c,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := BuildFromPre(testCase.preSrc)
-		actuallyRes := tree.Max()
-		c := testCase.comp(testCase.wannaRes, actuallyRes)
-		if c != 0 {
+		node := tree.Max()
+		actuallyRes := 0
+		if node != nil {
+			actuallyRes = node.Data()
+		}
+		if testCase.wannaRes != actuallyRes {
 			t.Fatalf("TestTree_Max : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
 	}
 }
 
 func TestTree_Min(t *testing.T) {
-	c := func(a, b interface{}) (res int) {
-		ai, _ := a.(int)
-		bi, _ := b.(int)
-		if ai == bi {
-			return 0
-		}
-		return -1
-	}
 	testCases := []struct {
 		preSrc   []*int
 		wannaRes int
 		comp     compare
 	}{
 		{
-			preSrc: []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
-			//"HIDEBJFGCA"
+			preSrc:   []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
 			wannaRes: 0,
-			comp:     c,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := BuildFromPre(testCase.preSrc)
-		actuallyRes := tree.Min()
-		c := testCase.comp(testCase.wannaRes, actuallyRes)
-		if c != 0 {
+		node := tree.Min()
+		actuallyRes := 0
+		if node != nil {
+			actuallyRes = node.Data()
+		}
+		if testCase.wannaRes != actuallyRes {
 			t.Fatalf("TestTree_Min : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
 	}
