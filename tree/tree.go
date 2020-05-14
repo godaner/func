@@ -17,5 +17,5 @@ type Tree interface {
 	Pre() (p []int)
 	Mid() (m []int)
 	Post() (p []int)
-	BFS() (p []int)
+	BFS() (n []int)
 }

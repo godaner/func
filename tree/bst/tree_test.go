@@ -124,8 +124,8 @@ func TestTree_MaxDepth(t *testing.T) {
 		comp     compare
 	}{
 		{
-			preSrc:   []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaRes: 7,
+			preSrc:   []int{0, -1, 3, 7, 8, 4, 2, 5, 9, 6},
+			wannaRes: 5,
 			comp:     c,
 		},
 	}
@@ -181,6 +181,41 @@ func TestTree_Min(t *testing.T) {
 		actuallyRes := node.Data()
 		if testCase.wannaRes != actuallyRes {
 			t.Fatalf("TestTree_Min : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+		}
+	}
+}
+
+func TestTree_BFS(t *testing.T) {
+	c := func(a, b interface{}) (res int) {
+		ai, _ := a.([]int)
+		bi, _ := b.([]int)
+		if len(ai) != len(bi) {
+			return -1
+		}
+		for i, ain := range ai {
+			if bi[i] != ain {
+				return -1
+			}
+		}
+		return 0
+	}
+	testCases := []struct {
+		preSrc   []int
+		wannaRes []int
+		comp     compare
+	}{
+		{
+			preSrc:   []int{0, -1, 3, 7, 8, 4, 2, 5, 9, 6},
+			wannaRes: []int{0, -1, 3, 2, 7, 4, 8, 5, 9, 6},
+			comp:     c,
+		},
+	}
+	for i, testCase := range testCases {
+		tree := Build(testCase.preSrc)
+		actuallyRes := tree.BFS()
+		c := testCase.comp(testCase.wannaRes, actuallyRes)
+		if c != 0 {
+			t.Fatalf("TestTree_BFS : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
 	}
 }

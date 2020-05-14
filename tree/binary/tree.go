@@ -59,22 +59,22 @@ func (t *Tree) BFS() (n []int) {
 // MaxDepth
 //  树的最大深度
 func (t *Tree) MaxDepth() (maxDep int) {
-	curDep := 0
-	depth(t, curDep, &maxDep)
-	return maxDep
-}
-func depth(root *Tree, curDep int, maxDep *int) {
-	if root == nil {
-		return
-	}
-	curDep++
-	if curDep > *maxDep {
-		*maxDep = curDep
-	}
-	depth(root.Left, curDep, maxDep)
-	depth(root.Right, curDep, maxDep)
+	return depth(t, -1)
 }
 
+func depth(root *Tree, curDep int) (dep int) {
+	if root == nil {
+		return curDep
+	}
+	curDep++
+	return maxN(depth(root.Left, curDep), depth(root.Right, curDep))
+}
+func maxN(a, b int) (m int) {
+	if a >= b {
+		return a
+	}
+	return b
+}
 // Find
 func (t *Tree) FindParent(data int) (r tree.Tree) {
 	return findParent(t, data)

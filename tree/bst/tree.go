@@ -1,6 +1,7 @@
 package bst
 
 import (
+	"container/list"
 	"github.com/godaner/func/tree"
 )
 
@@ -28,23 +29,22 @@ func (t *Tree) Compare(tar tree.Tree) (res int) {
 }
 
 func (t *Tree) MaxDepth() (maxDep int) {
-	curDep := 0
-	depth(t, curDep, &maxDep)
-	return maxDep
+	return depth(t, -1)
 }
 
-func depth(root *Tree, curDep int, maxDep *int) {
+func depth(root *Tree, curDep int) (dep int) {
 	if root == nil {
-		return
+		return curDep
 	}
 	curDep++
-	if curDep > *maxDep {
-		*maxDep = curDep
-	}
-	depth(root.Left, curDep, maxDep)
-	depth(root.Right, curDep, maxDep)
+	return max(depth(root.Left, curDep), depth(root.Right, curDep))
 }
-
+func max(a, b int) (m int) {
+	if a >= b {
+		return a
+	}
+	return b
+}
 func (t *Tree) Min() (r tree.Tree) {
 	if t == nil {
 		return nil
@@ -71,8 +71,29 @@ func (t *Tree) Max() (r tree.Tree) {
 	}
 }
 
-func (t *Tree) BFS() (p []int) {
-	panic("implement me")
+func (t *Tree) BFS() (n []int) {
+	if t == nil {
+		return
+	}
+	queue := list.New()
+	queue.PushBack(t)
+	for queue.Len() > 0 {
+		// get father
+		val := queue.Front()
+		queue.Remove(val)
+
+		node := val.Value.(*Tree)
+		n = append(n, node.Date)
+
+		//put child
+		if node.Left != nil {
+			queue.PushBack(node.Left)
+		}
+		if node.Right != nil {
+			queue.PushBack(node.Right)
+		}
+	}
+	return n
 }
 
 func (t *Tree) FindParent(data int) (r tree.Tree) {

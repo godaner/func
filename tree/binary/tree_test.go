@@ -230,7 +230,7 @@ func TestTree_MaxDepth(t *testing.T) {
 		{
 			preSrc: []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
 			//"HIDEBJFGCA"
-			wannaRes: 4,
+			wannaRes: 3,
 			comp:     c,
 		},
 	}
@@ -347,7 +347,7 @@ func TestTree_BFS(t *testing.T) {
 		actuallyRes := tree.BFS()
 		c := testCase.comp(testCase.wannaRes, actuallyRes)
 		if c != 0 {
-			t.Fatalf("TestTree_Min : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+			t.Fatalf("TestTree_BFS : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
 	}
 }
