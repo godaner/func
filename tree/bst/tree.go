@@ -1,9 +1,25 @@
 package bst
 
+import (
+	"github.com/godaner/func/tree"
+)
+
 // Tree
 type Tree struct {
 	Left, Right *Tree
 	Date        int
+}
+
+func (t *Tree) Data() (data int) {
+	panic("implement me")
+}
+
+func (t *Tree) Compare(tar tree.Tree) (res int) {
+	panic("implement me")
+}
+
+func (t *Tree) BFS() (p []int) {
+	panic("implement me")
 }
 
 func (t *Tree) MaxDepth() (maxDep int) {
@@ -18,28 +34,61 @@ func (t *Tree) Max() (maxN int) {
 	panic("implement me")
 }
 
-// Find
-func (t *Tree) Find(data int) (exits bool) {
-	find(t, data, &exits)
-	return exits
+func (t *Tree) FindParent(data int) (r tree.Tree) {
+	return findParent(t, data)
 }
-func find(root *Tree, data int, exits *bool) {
+
+// findParent
+func findParent(root *Tree, data int) (r tree.Tree) {
+	if root == nil {
+		return nil
+	}
+	if root.Left != nil && root.Left.Date == data {
+		return root
+	}
+	if root.Right != nil && root.Right.Date == data {
+		return root
+	}
+	if data <= root.Date {
+		lr := findParent(root.Left, data)
+		if lr != nil {
+			return lr
+		}
+	} else {
+		rr := findParent(root.Right, data)
+		if rr != nil {
+			return rr
+		}
+	}
+	return nil
+}
+
+// Find
+func (t *Tree) Find(data int) (r tree.Tree) {
+
+	return find(t, data)
+}
+func find(root *Tree, data int) (r tree.Tree) {
 	if root == nil {
 		return
 	}
-	if (*exits) == true {
-		return
-	}
 	if data == root.Date {
-		*exits = true
-		return
+		return root
 	}
-	if data<=root.Date{
-		find(root.Left, data, exits)
-	}else{
-		find(root.Right, data, exits)
+	if data <= root.Date {
+		r := find(root.Left, data)
+		if r != nil {
+			return r
+		}
+	} else {
+		r := find(root.Right, data)
+		if r != nil {
+			return r
+		}
 	}
+	return nil
 }
+
 // Add
 func (t *Tree) Add(data int) {
 	if t == nil {
@@ -87,7 +136,6 @@ func newTreeNode(data int) (tn *Tree) {
 		Date:  data,
 	}
 }
-
 
 // Pre
 func (t *Tree) Pre() (p []int) {

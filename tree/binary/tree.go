@@ -1,11 +1,32 @@
 package binary
 
-import "container/list"
+import (
+	"container/list"
+	"github.com/godaner/func/tree"
+)
 
 // Tree
 type Tree struct {
 	Left, Right *Tree
 	Date        int
+}
+
+func (t *Tree) Compare(tar tree.Tree) (res int) {
+	if t == tar {
+		return tree.TREE_COMPARE_SAME
+	}
+	if t.Data() == tar.Data() {
+		return tree.TREE_COMPARE_SAME
+	}
+	return tree.TREE_COMPARE_L
+}
+
+// Data
+func (t *Tree) Data() (data int) {
+	if t == nil {
+		return 0
+	}
+	return t.Date
 }
 
 // BFS
@@ -18,17 +39,17 @@ func (t *Tree) BFS() (n []int) {
 	queue.PushBack(t)
 	for queue.Len() > 0 {
 		// get father
-		val:=queue.Front()
+		val := queue.Front()
 		queue.Remove(val)
 
 		node := val.Value.(*Tree)
 		n = append(n, node.Date)
 
 		//put child
-		if node.Left!=nil{
+		if node.Left != nil {
 			queue.PushBack(node.Left)
 		}
-		if node.Right!=nil{
+		if node.Right != nil {
 			queue.PushBack(node.Right)
 		}
 	}
@@ -55,23 +76,55 @@ func depth(root *Tree, curDep int, maxDep *int) {
 }
 
 // Find
-func (t *Tree) Find(data int) (exits bool) {
-	find(t, data, &exits)
-	return exits
+func (t *Tree) FindParent(data int) (r tree.Tree) {
+	return findParent(t, data)
 }
-func find(root *Tree, data int, exits *bool) {
+
+// findParent
+func findParent(root *Tree, data int) (r tree.Tree) {
 	if root == nil {
-		return
+		return nil
 	}
-	if (*exits) == true {
-		return
+	if root.Left != nil && root.Left.Date == data {
+		return root
 	}
-	if data == root.Date {
-		*exits = true
-		return
+	if root.Right != nil && root.Right.Date == data {
+		return root
 	}
-	find(root.Left, data, exits)
-	find(root.Right, data, exits)
+	lr := findParent(root.Left, data)
+	if lr != nil {
+		return lr
+	}
+	rr := findParent(root.Right, data)
+	if rr != nil {
+		return rr
+	}
+	return nil
+}
+
+// Find
+func (t *Tree) Find(data int) (r tree.Tree) {
+	return find(t, data)
+}
+
+// find
+func find(root *Tree, data int) (r tree.Tree) {
+	if root == nil {
+		return nil
+	}
+	if root.Date == data {
+		return root
+	}
+
+	lr := find(root.Left, data)
+	if lr != nil {
+		return lr
+	}
+	rr := find(root.Right, data)
+	if rr != nil {
+		return rr
+	}
+	return nil
 }
 
 // Min

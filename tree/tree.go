@@ -1,11 +1,21 @@
 package tree
 
+const (
+	TREE_COMPARE_SAME = 1
+	TREE_COMPARE_L    = -1
+	TREE_COMPARE_G    = 1
+)
+
 type Tree interface {
-	Find(data int) (exits bool)
+	Data() (data int)
+	Compare(tar Tree) (res int)
+	Find(data int) (r Tree)
+	FindParent(data int) (r Tree)
 	MaxDepth() (maxDep int)
 	Min() (minN int)
 	Max() (maxN int)
 	Pre() (p []int)
 	Mid() (m []int)
 	Post() (p []int)
+	BFS() (p []int)
 }

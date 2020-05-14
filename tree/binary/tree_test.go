@@ -175,41 +175,54 @@ func TestTree_Min(t *testing.T) {
 }
 
 func TestTree_Find(t *testing.T) {
-	c := func(a, b interface{}) (res int) {
-		ai, _ := a.(bool)
-		bi, _ := b.(bool)
-		if ai == bi {
-			return 0
-		}
-		return -1
-	}
 	testCases := []struct {
 		preSrc        []*int
-		wannaRes      bool
+		exits         bool
 		wannaFindDate int
-		comp          compare
 	}{
 		{
-			preSrc: []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
-			//"HIDEBJFGCA"
+			preSrc:        []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
 			wannaFindDate: 8,
-			wannaRes:      true,
-			comp:          c,
+			exits:         true,
 		},
 		{
-			preSrc: []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
-			//"HIDEBJFGCA"
+			preSrc:        []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
 			wannaFindDate: -1,
-			wannaRes:      false,
-			comp:          c,
+			exits:         false,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := BuildFromPre(testCase.preSrc)
-		actuallyRes := tree.Find(testCase.wannaFindDate)
-		c := testCase.comp(testCase.wannaRes, actuallyRes)
-		if c != 0 {
-			t.Fatalf("TestTree_Find : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+		node := tree.Find(testCase.wannaFindDate)
+		actuallyRes := node != nil
+		if testCase.exits != actuallyRes {
+			t.Fatalf("TestTree_Find : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.exits)
+		}
+	}
+}
+func TestTree_FindParent(t *testing.T) {
+	testCases := []struct {
+		preSrc        []*int
+		exits         bool
+		wannaFindDate int
+	}{
+		{
+			preSrc:        []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
+			wannaFindDate: 8,
+			exits:         true,
+		},
+		{
+			preSrc:        []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
+			wannaFindDate: 0,
+			exits:         false,
+		},
+	}
+	for i, testCase := range testCases {
+		tree := BuildFromPre(testCase.preSrc)
+		node := tree.FindParent(testCase.wannaFindDate)
+		actuallyRes := node != nil
+		if testCase.exits != actuallyRes {
+			t.Fatalf("TestTree_FindParent : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.exits)
 		}
 	}
 }

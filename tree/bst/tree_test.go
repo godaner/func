@@ -32,13 +32,13 @@ func TestBuild(t *testing.T) {
 			comp:     c,
 		},
 		{
-			src:      []int{1, 0, 1, 3, 7, 8, 4, 2, 5, 9, 6, -1},
-			wannaRes: []int{-1, 0, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+			src:      []int{1, 0, 3, 7, 8, 4, 2, 5, 9, 6, -1},
+			wannaRes: []int{-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
 			comp:     c,
 		},
 		{
-			src:      []int{-1, -1, -2, 0, 1, 1, 1},
-			wannaRes: []int{-2, -1, -1, 0, 1, 1, 1},
+			src:      []int{-1, -2, 0, 1},
+			wannaRes: []int{-2, -1, 0, 1},
 			comp:     c,
 		},
 	}
@@ -54,39 +54,57 @@ func TestBuild(t *testing.T) {
 }
 
 func TestTree_Find(t *testing.T) {
-	c := func(a, b interface{}) (res int) {
-		ai, _ := a.(bool)
-		bi, _ := b.(bool)
-		if ai == bi {
-			return 0
-		}
-		return -1
-	}
+
 	testCases := []struct {
-		src      []int
-		wannaRes      bool
+		src           []int
+		exits         bool
 		wannaFindDate int
-		comp          compare
 	}{
 		{
-			src:      []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
+			src:           []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
 			wannaFindDate: 8,
-			wannaRes:      true,
-			comp:          c,
+			exits:         true,
 		},
 		{
-			src:      []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
+			src:           []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
 			wannaFindDate: -1,
-			wannaRes:      false,
-			comp:          c,
+			exits:         false,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := Build(testCase.src)
-		actuallyRes := tree.Find(testCase.wannaFindDate)
-		c := testCase.comp(testCase.wannaRes, actuallyRes)
-		if c != 0 {
-			t.Fatalf("TestTree_Find : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+		node := tree.Find(testCase.wannaFindDate)
+		actuallyRes := node != nil
+		if testCase.exits != actuallyRes {
+			t.Fatalf("TestTree_Find : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.exits)
+		}
+	}
+}
+
+func TestTree_FindParent(t *testing.T) {
+
+	testCases := []struct {
+		src           []int
+		exits         bool
+		wannaFindDate int
+	}{
+		{
+			src:           []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
+			wannaFindDate: 8,
+			exits:         true,
+		},
+		{
+			src:           []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
+			wannaFindDate: 0,
+			exits:         false,
+		},
+	}
+	for i, testCase := range testCases {
+		tree := Build(testCase.src)
+		node := tree.FindParent(testCase.wannaFindDate)
+		actuallyRes := node != nil
+		if testCase.exits != actuallyRes {
+			t.Fatalf("TestTree_FindParent : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.exits)
 		}
 	}
 }
