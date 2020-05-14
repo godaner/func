@@ -11,26 +11,67 @@ type Tree struct {
 }
 
 func (t *Tree) Data() (data int) {
-	panic("implement me")
+	if t == nil {
+		return 0
+	}
+	return t.Date
 }
 
 func (t *Tree) Compare(tar tree.Tree) (res int) {
-	panic("implement me")
-}
-
-func (t *Tree) BFS() (p []int) {
-	panic("implement me")
+	if t == tar {
+		return tree.TREE_COMPARE_SAME
+	}
+	if t.Data() == tar.Data() {
+		return tree.TREE_COMPARE_SAME
+	}
+	return tree.TREE_COMPARE_L
 }
 
 func (t *Tree) MaxDepth() (maxDep int) {
-	panic("implement me")
+	curDep := 0
+	depth(t, curDep, &maxDep)
+	return maxDep
 }
 
-func (t *Tree) Min() (minN int) {
-	panic("implement me")
+func depth(root *Tree, curDep int, maxDep *int) {
+	if root == nil {
+		return
+	}
+	curDep++
+	if curDep > *maxDep {
+		*maxDep = curDep
+	}
+	depth(root.Left, curDep, maxDep)
+	depth(root.Right, curDep, maxDep)
 }
 
-func (t *Tree) Max() (maxN int) {
+func (t *Tree) Min() (r tree.Tree) {
+	if t == nil {
+		return nil
+	}
+	min := t
+	for {
+		if min.Left == nil {
+			return min
+		}
+		min = min.Left
+	}
+}
+
+func (t *Tree) Max() (r tree.Tree) {
+	if t == nil {
+		return nil
+	}
+	max := t
+	for {
+		if max.Right == nil {
+			return max
+		}
+		max = max.Right
+	}
+}
+
+func (t *Tree) BFS() (p []int) {
 	panic("implement me")
 }
 

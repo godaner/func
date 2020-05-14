@@ -72,7 +72,7 @@ func depth(root *Tree, curDep int, maxDep *int) {
 		*maxDep = curDep
 	}
 	depth(root.Left, curDep, maxDep)
-	depth(root.Left, curDep, maxDep)
+	depth(root.Right, curDep, maxDep)
 }
 
 // Find
