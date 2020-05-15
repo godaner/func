@@ -383,16 +383,18 @@ func TestTree_Rm(t *testing.T) {
 			preSrc: []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
 			//"HIDEBJFGCA"
 			rm:       3,
-			wannaRes: []int{1, 4},
+			wannaRes: []int{0, 1, 2, 4, 5, 6, 9},
 			comp:     c,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := BuildFromPre(testCase.preSrc)
+		//tree.Print()
 		tt := tree.Rm(testCase.rm)
 		var actuallyRes []int
 		if tt != nil {
 			actuallyRes = tt.BFS()
+			//tt.Print()
 		}
 		c := testCase.comp(testCase.wannaRes, actuallyRes)
 		if c != 0 {

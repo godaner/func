@@ -13,12 +13,30 @@ type Tree struct {
 	Date        int
 }
 
-
+// Rm
 func (t *Tree) Rm(data int) (tt tree.Tree) {
-	panic("implement me")
+	return rm(t,nil, data)
 }
 
+func rm(t,p *Tree, data int) tree.Tree {
+	if t == nil {
+		return nil
+	}
+	if t.Date!=data{
+		r:=rm(t.Left,t,data)
+		if r!=nil{
+			return t
+		}
+		rm(t.Right,t,data)
+		//return
+	}
 
+	return nil
+}
+func (t *Tree)successor(data int)(tt *Tree){
+	t.Mid()
+	return nil
+}
 func (t *Tree) Print() {
 	printPos(getTreePos(t))
 }
@@ -34,7 +52,9 @@ func printPos(pos [][]string) {
 		}
 		fmt.Println()
 	}
+	fmt.Println("--------------")
 }
+
 // getTreePos
 //  计算树的各个节点的位置
 func getTreePos(root *Tree) [][]string {

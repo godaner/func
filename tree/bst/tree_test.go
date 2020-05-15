@@ -249,7 +249,7 @@ func TestTree_Print(t *testing.T) {
 		},
 		{
 			//preSrc: []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
-			preSrc: []int{11, 12, 33, 71, 8, 43, 2, 5, 9, 6},
+			preSrc: []int{50, 30, 80, 20, 35, 34, 32, 40, 70, 75, 100},
 		},
 	}
 	for _, testCase := range testCases {

@@ -20,8 +20,6 @@ func (t *Tree) Width() (w int) {
 	return (1 << h) - 1
 }
 
-
-
 func (t *Tree) Print() {
 	printPos(getTreePos(t))
 }
@@ -37,7 +35,9 @@ func printPos(pos [][]string) {
 		}
 		fmt.Println()
 	}
+	fmt.Println("--------------")
 }
+
 // getTreePos
 //  计算树的各个节点的位置
 func getTreePos(root *Tree) [][]string {
@@ -70,39 +70,33 @@ func fill(root *Tree, ans *[][]string, h, l, r int) {
 }
 
 func (t *Tree) Rm(data int) (tt tree.Tree) {
-	return rm(t, data)
+	if t == nil {
+		return nil
+	}
+	if t.Date == data {
+		return nil
+	}
+	rm(t, data)
+	return t
 }
-func rm(root *Tree, data int) (tt tree.Tree) {
-	// first
-	if root == nil {
-		return nil
-	}
-	if root.Date == data {
-		return nil
-	}
+func rm(root *Tree, data int) {
 	// rec
 	if root.Left != nil {
 		if root.Left.Date == data {
 			root.Left = nil
-			return root
+			return
 		} else {
-			rs := rm(root.Left, data)
-			if rs != nil {
-				return rs
-			}
+			rm(root.Left, data)
 		}
 	}
 	if root.Right != nil {
 		if root.Right.Date == data {
 			root.Right = nil
+			return
 		} else {
-			rs := rm(root.Right, data)
-			if rs != nil {
-				return rs
-			}
+			rm(root.Right, data)
 		}
 	}
-	return nil
 }
 
 func (t *Tree) Compare(tar tree.Tree) (res int) {
