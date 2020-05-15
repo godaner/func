@@ -4,7 +4,7 @@ import (
 	"container/list"
 	"fmt"
 	"github.com/godaner/func/tree"
-	"strings"
+	"strconv"
 )
 
 // Tree
@@ -14,78 +14,61 @@ type Tree struct {
 }
 
 func (t *Tree) Width() (w int) {
-	return width(t)
+	// 计算输出数组的规模
+	h := uint(t.Depth() + 1)
+	// 宽度（最底层的宽度）， 2^n - 1
+	return (1 << h) - 1
 }
 
-func width(root *Tree) (w int) {
-	if root == nil {
-		return 0
-	}
-	return 1 + maxN(width(root.Left), width(root.Right))*2
-}
 
-type PrintWrapper struct {
-	Level int
-	*Tree
-}
 
 func (t *Tree) Print() {
-	if t == nil {
+	printPos(getTreePos(t))
+}
+func printPos(pos [][]string) {
+	for i := 0; i < len(pos); i++ {
+		ts := pos[i]
+		for j := 0; j < len(ts); j++ {
+			if ts[j] == "" {
+				fmt.Print(" ")
+			} else {
+				fmt.Print("", ts[j])
+			}
+		}
+		fmt.Println()
+	}
+}
+// getTreePos
+//  计算树的各个节点的位置
+func getTreePos(root *Tree) [][]string {
+	// 计算输出数组的规模
+	h := uint(root.Depth() + 1)
+	// 宽度（最底层的宽度）， 2^n - 1
+	w := (1 << h) - 1
+	// 构造答案二维数组（slice）
+	ans := make([][]string, h)
+	for i := range ans {
+		ans[i] = make([]string, w)
+	}
+	fill(root, &ans, 0, 0, w-1)
+	return ans
+}
+
+// fill 递归的填充。
+//
+// 对当前传入的数，如果是空树，则返回。
+// 我们获得当前可填充范围，计算出中位数mid，在二维数组的[h][mid]填充节点值，
+// 然后递归对左节点，右节点调用fill方法。
+func fill(root *Tree, ans *[][]string, h, l, r int) {
+	if root == nil {
 		return
 	}
-	queue := list.New()
-	queue.PushBack(&PrintWrapper{
-		Level: 1,
-		Tree:  t,
-	})
-	levelCount := map[int]int{1: 1}
-	for queue.Len() > 0 {
-		// get father
-		val := queue.Front()
-		queue.Remove(val)
-
-		node := val.Value.(*PrintWrapper)
-		levelCount[node.Level]--
-
-		w:=node.Width()
-		span := repeatSpace(w)
-		fmt.Print(span, node.Data(),span,repeatSpaceAll(node.Level-1)) //!!!!!
-
-
-		//put child
-		level := node.Level + 1
-		if node.Left != nil {
-			queue.PushBack(&PrintWrapper{
-				Level: level,
-				Tree:  node.Left,
-			})
-			levelCount[level]++
-		}
-		if node.Right != nil {
-			queue.PushBack(&PrintWrapper{
-				Level: level,
-				Tree:  node.Right,
-			})
-			levelCount[level]++
-		}
-		if levelCount[node.Level] == 0 {
-			fmt.Println("")
-		}
-	}
+	mid := (l + r) / 2
+	(*ans)[h][mid] = strconv.Itoa(root.Date)
+	fill(root.Left, ans, h+1, l, mid-1)
+	fill(root.Right, ans, h+1, mid+1, r)
 }
-func repeatSpaceAll(w int) string {
-	if w <= 0 {
-		return ""
-	}
-	return strings.Repeat(" ", w)
-}
-func repeatSpace(w int) string {
-	ww := (w-1) /2
-	if ww <= 0 {
-		return ""
-	}
-	return strings.Repeat(" ", ww)
-}
+
 func (t *Tree) Rm(data int) (tt tree.Tree) {
 	return rm(t, data)
 }
@@ -167,9 +150,9 @@ func (t *Tree) BFS() (n []int) {
 	return n
 }
 
-// MaxDepth
-//  树的最大深度
-func (t *Tree) MaxDepth() (maxDep int) {
+// Depth
+//  树的深度
+func (t *Tree) Depth() (maxDep int) {
 	return depth(t, -1)
 }
 

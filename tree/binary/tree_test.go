@@ -213,7 +213,7 @@ func TestTree_FindParent(t *testing.T) {
 		}
 	}
 }
-func TestTree_MaxDepth(t *testing.T) {
+func TestTree_Depth(t *testing.T) {
 	c := func(a, b interface{}) (res int) {
 		ai, _ := a.(int)
 		bi, _ := b.(int)
@@ -236,10 +236,10 @@ func TestTree_MaxDepth(t *testing.T) {
 	}
 	for i, testCase := range testCases {
 		tree := BuildFromPre(testCase.preSrc)
-		actuallyRes := tree.MaxDepth()
+		actuallyRes := tree.Depth()
 		c := testCase.comp(testCase.wannaRes, actuallyRes)
 		if c != 0 {
-			t.Fatalf("TestTree_MaxDepth : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+			t.Fatalf("TestTree_Depth : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
 	}
 }
@@ -415,7 +415,7 @@ func TestTree_Width(t *testing.T) {
 		tree := BuildFromPre(testCase.preSrc)
 		actuallyRes := tree.Width()
 		if actuallyRes != testCase.wannaRes {
-			t.Fatalf("TestTree_Rm : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+			t.Fatalf("TestTree_Width : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
 	}
 }
