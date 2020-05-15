@@ -2,13 +2,124 @@ package binary
 
 import (
 	"container/list"
+	"fmt"
 	"github.com/godaner/func/tree"
+	"strings"
 )
 
 // Tree
 type Tree struct {
 	Left, Right *Tree
 	Date        int
+}
+
+func (t *Tree) Width() (w int) {
+	return width(t)
+}
+
+func width(root *Tree) (w int) {
+	if root == nil {
+		return 0
+	}
+	return 1 + maxN(width(root.Left), width(root.Right))*2
+}
+
+type PrintWrapper struct {
+	Level int
+	*Tree
+}
+
+func (t *Tree) Print() {
+	if t == nil {
+		return
+	}
+	queue := list.New()
+	queue.PushBack(&PrintWrapper{
+		Level: 1,
+		Tree:  t,
+	})
+	levelCount := map[int]int{1: 1}
+	for queue.Len() > 0 {
+		// get father
+		val := queue.Front()
+		queue.Remove(val)
+
+		node := val.Value.(*PrintWrapper)
+		levelCount[node.Level]--
+
+		w:=node.Width()
+		span := repeatSpace(w)
+		fmt.Print(span, node.Data(),span,repeatSpaceAll(node.Level-1)) //!!!!!
+
+
+		//put child
+		level := node.Level + 1
+		if node.Left != nil {
+			queue.PushBack(&PrintWrapper{
+				Level: level,
+				Tree:  node.Left,
+			})
+			levelCount[level]++
+		}
+		if node.Right != nil {
+			queue.PushBack(&PrintWrapper{
+				Level: level,
+				Tree:  node.Right,
+			})
+			levelCount[level]++
+		}
+		if levelCount[node.Level] == 0 {
+			fmt.Println("")
+		}
+	}
+}
+func repeatSpaceAll(w int) string {
+	if w <= 0 {
+		return ""
+	}
+	return strings.Repeat(" ", w)
+}
+func repeatSpace(w int) string {
+	ww := (w-1) /2
+	if ww <= 0 {
+		return ""
+	}
+	return strings.Repeat(" ", ww)
+}
+func (t *Tree) Rm(data int) (tt tree.Tree) {
+	return rm(t, data)
+}
+func rm(root *Tree, data int) (tt tree.Tree) {
+	// first
+	if root == nil {
+		return nil
+	}
+	if root.Date == data {
+		return nil
+	}
+	// rec
+	if root.Left != nil {
+		if root.Left.Date == data {
+			root.Left = nil
+			return root
+		} else {
+			rs := rm(root.Left, data)
+			if rs != nil {
+				return rs
+			}
+		}
+	}
+	if root.Right != nil {
+		if root.Right.Date == data {
+			root.Right = nil
+		} else {
+			rs := rm(root.Right, data)
+			if rs != nil {
+				return rs
+			}
+		}
+	}
+	return nil
 }
 
 func (t *Tree) Compare(tar tree.Tree) (res int) {
@@ -75,6 +186,7 @@ func maxN(a, b int) (m int) {
 	}
 	return b
 }
+
 // Find
 func (t *Tree) FindParent(data int) (r tree.Tree) {
 	return findParent(t, data)

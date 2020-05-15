@@ -11,6 +11,10 @@ type Tree struct {
 	Date        int
 }
 
+func (t *Tree) Rm(data int) (tt tree.Tree) {
+	panic("implement me")
+}
+
 func (t *Tree) Data() (data int) {
 	if t == nil {
 		return 0
