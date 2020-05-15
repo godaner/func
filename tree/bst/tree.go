@@ -14,29 +14,36 @@ type Tree struct {
 }
 
 // Rm
+/*删除元素
+*1、如果被删除结点只有一个子结点，就直接将A的子结点连至A的父结点上，并将A删除
+*2、如果被删除结点有两个子结点，将该结点右子数内的最小结点取代A。
+ */
 func (t *Tree) Rm(data int) (tt tree.Tree) {
-	return rm(t,nil, data)
-}
 
-func rm(t,p *Tree, data int) tree.Tree {
+	return t.rm(data)
+}
+func (t *Tree) rm(data int) (tt *Tree) {
 	if t == nil {
-		return nil
+		return t
 	}
-	if t.Date!=data{
-		r:=rm(t.Left,t,data)
-		if r!=nil{
-			return t
+	compare := data - t.Data()
+	if compare < 0 {
+		t.Left = t.Left.rm(data)
+	} else if compare > 0 {
+		t.Right = t.Right.rm(data)
+	} else { //找到结点,删除结点
+		if t.Left != nil && t.Right != nil {
+			t.Date = t.Right.Min().Data()
+			t.Right = t.Right.rm(t.Data())
+		} else if t.Left != nil {
+			t = t.Left
+		} else {
+			t = t.Right
 		}
-		rm(t.Right,t,data)
-		//return
 	}
+	return t
+}
 
-	return nil
-}
-func (t *Tree)successor(data int)(tt *Tree){
-	t.Mid()
-	return nil
-}
 func (t *Tree) Print() {
 	printPos(getTreePos(t))
 }
@@ -251,7 +258,7 @@ func (t *Tree) Add(data int) {
 
 // add
 func add(curt *Tree, data int) {
-	// left
+	// Left
 	if data <= curt.Date {
 		if curt.Left == nil {
 			curt.Left = newTreeNode(data)
@@ -260,7 +267,7 @@ func add(curt *Tree, data int) {
 		add(curt.Left, data)
 		return
 	}
-	// right
+	// Right
 	if curt.Right == nil {
 		curt.Right = newTreeNode(data)
 		return
@@ -269,7 +276,7 @@ func add(curt *Tree, data int) {
 }
 
 // Build
-func Build(datas []int) (t *Tree) {
+func Build(datas []int) (t tree.Tree) {
 	if len(datas) <= 0 {
 		return
 	}

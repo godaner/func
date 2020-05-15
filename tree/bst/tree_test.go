@@ -257,3 +257,40 @@ func TestTree_Print(t *testing.T) {
 		tree.Print()
 	}
 }
+
+func TestTree_Rm(t *testing.T) {
+	c := func(a, b interface{}) (res int) {
+		ai, _ := a.([]int)
+		bi, _ := b.([]int)
+		if len(ai) != len(bi) {
+			return -1
+		}
+		for i, ain := range ai {
+			if bi[i] != ain {
+				return -1
+			}
+		}
+		return 0
+	}
+	testCases := []struct {
+		preSrc   []int
+		wannaRes []int
+		wannaRm  int
+		comp     compare
+	}{
+		{
+			wannaRes: []int{50, 30, 20, 35, 34, 32, 40, 80, 75, 100},
+			wannaRm:  70,
+			preSrc:   []int{50, 30, 80, 20, 35, 34, 32, 40, 70, 75, 100},
+			comp:     c,
+		},
+	}
+	for i, testCase := range testCases {
+		tree := Build(testCase.preSrc)
+		tree = tree.Rm(testCase.wannaRm)
+		actuallyRes := tree.Pre()
+		if c(testCase.wannaRes, actuallyRes) != 0 {
+			t.Fatalf("TestTree_Rm : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
+		}
+	}
+}
