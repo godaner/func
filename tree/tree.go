@@ -14,6 +14,7 @@ type Tree interface {
 	FindParent(data int) (r Tree)
 	Depth() (dep int)
 	Rm(data int) (tt Tree)
+	Add(data int) (tt Tree)
 	Print()
 	Min() (r Tree)
 	Max() (r Tree)

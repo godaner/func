@@ -249,11 +249,12 @@ func find(root *Tree, data int) (r tree.Tree) {
 }
 
 // Add
-func (t *Tree) Add(data int) {
+func (t *Tree) Add(data int) (tt tree.Tree) {
 	if t == nil {
 		return
 	}
 	add(t, data)
+	return t
 }
 
 // add
