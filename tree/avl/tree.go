@@ -18,9 +18,10 @@ func Build(datas []int) (t tree.Tree) {
 	if len(datas) <= 0 {
 		return
 	}
-	root := newTreeNode(datas[0])
+	var root tree.Tree
+	root = newTreeNode(datas[0])
 	for i := 1; i < len(datas); i++ {
-		root.Add(datas[i])
+		root = root.Add(datas[i])
 	}
 	return root
 }

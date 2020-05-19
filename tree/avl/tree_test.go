@@ -90,13 +90,13 @@ func TestTree_FindParent(t *testing.T) {
 	}{
 		{
 			src:           []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaFindDate: 8,
+			wannaFindDate: 7,
 			exits:         true,
 		},
 		{
 			src:           []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaFindDate: 0,
-			exits:         false,
+			wannaFindDate: 1,
+			exits:         true,
 		},
 	}
 	for i, testCase := range testCases {
@@ -125,7 +125,7 @@ func TestTree_Depth(t *testing.T) {
 	}{
 		{
 			preSrc:   []int{0, -1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaRes: 5,
+			wannaRes: 3,
 			comp:     c,
 		},
 	}
@@ -206,7 +206,7 @@ func TestTree_BFS(t *testing.T) {
 	}{
 		{
 			preSrc:   []int{0, -1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaRes: []int{0, -1, 3, 2, 7, 4, 8, 5, 9, 6},
+			wannaRes: []int{3 ,0, 7 ,-1, 2, 5, 8, 4, 6, 9},
 			comp:     c,
 		},
 	}
@@ -227,7 +227,7 @@ func TestTree_Width(t *testing.T) {
 	}{
 		{
 			preSrc:   []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaRes: 127,
+			wannaRes: 15,
 		},
 	}
 	for i, testCase := range testCases {
