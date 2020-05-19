@@ -59,20 +59,20 @@ func (t *Tree) Rm(data int) (tt tree.Tree) {
 	// second , balance it
 	t.refreshHigh()
 
-	childBF := t.getBalancedFactor() // child bf
-	if childBF >= 2 {
-		grandsonBF := t.Left.getBalancedFactor() // grandson bf
-		if grandsonBF >= 0 {                     //LL
+	bf := t.getBalancedFactor() // bf
+	if bf >= 2 {
+		leftBF := t.Left.getBalancedFactor() // child bf
+		if leftBF >= 0 {                     // LL
 			t = t.rightRotation()
-		} else { //LR
+		} else { // LR
 			t = t.leftRightRotation()
 		}
 	}
-	if childBF <= -2 {
-		grandsonBF := t.Right.getBalancedFactor() // grandson bf
-		if grandsonBF > 0 {                       //RL
+	if bf <= -2 {
+		rightBF := t.Right.getBalancedFactor() // child bf
+		if rightBF > 0 {                       // RL
 			t = t.rightLeftRotation()
-		} else { //RR
+		} else { // RR
 			t = t.leftRotation()
 		}
 	}
