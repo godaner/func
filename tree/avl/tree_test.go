@@ -1,7 +1,6 @@
 package avl
 
 import (
-	"fmt"
 	"testing"
 )
 
