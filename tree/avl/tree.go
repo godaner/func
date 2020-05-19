@@ -36,7 +36,47 @@ func newTreeNode(data int) (tn *Tree) {
 }
 
 func (t *Tree) Rm(data int) (tt tree.Tree) {
-	panic("implement me")
+	if t == nil {
+		return nil
+	}
+
+	// first , rm node
+	if data < t.Date { // left child
+		t.Left, _ = t.Left.Rm(data).(*Tree)
+	} else if data > t.Date { // right child
+		t.Right, _ = t.Right.Rm(data).(*Tree)
+	} else { // ==
+		if t.Left != nil && t.Right != nil {
+			t.Date = t.Right.Min().Data()
+			t.Right, _ = t.Right.Rm(t.Date).(*Tree)
+		} else if t.Left == nil {
+			t = t.Right
+		} else if t.Right == nil {
+			t = t.Left
+		}
+	}
+
+	// second , balance it
+	t.refreshHigh()
+
+	childBF := t.getBalancedFactor() // child bf
+	if childBF >= 2 {
+		grandsonBF := t.Left.getBalancedFactor() // grandson bf
+		if grandsonBF >= 0 {                     //LL
+			t = t.rightRotation()
+		} else { //LR
+			t = t.leftRightRotation()
+		}
+	}
+	if childBF <= -2 {
+		grandsonBF := t.Right.getBalancedFactor() // grandson bf
+		if grandsonBF > 0 {                       //RL
+			t = t.rightLeftRotation()
+		} else { //RR
+			t = t.leftRotation()
+		}
+	}
+	return t
 }
 
 func (t *Tree) Add(data int) (tt tree.Tree) {
@@ -44,10 +84,10 @@ func (t *Tree) Add(data int) (tt tree.Tree) {
 		return newTreeNode(data)
 	}
 	if data < t.Date {
-		t.Left = t.Left.Add(data).(*Tree)
-		t.High = maxN(t.Left.getHigh(), t.Right.getHigh()) + 1
+		t.Left, _ = t.Left.Add(data).(*Tree)
+		t.refreshHigh()
 		bf := t.getBalancedFactor()
-		if bf >= 2 { // 不平衡
+		if bf >= 2 || bf <= -2 { // 不平衡
 			if data < t.Left.Data() { // LL
 				return t.rightRotation()
 			} else { // LR
@@ -55,10 +95,10 @@ func (t *Tree) Add(data int) (tt tree.Tree) {
 			}
 		}
 	} else {
-		t.Right = t.Right.Add(data).(*Tree)
-		t.High = maxN(t.Left.getHigh(), t.Right.getHigh()) + 1
+		t.Right, _ = t.Right.Add(data).(*Tree)
+		t.refreshHigh()
 		bf := t.getBalancedFactor()
-		if bf >= 2 { // 不平衡
+		if bf >= 2 || bf <= -2 { // 不平衡
 			if data > t.Right.Data() { // RR
 				return t.leftRotation()
 			} else { // RL
@@ -69,20 +109,21 @@ func (t *Tree) Add(data int) (tt tree.Tree) {
 	return t
 }
 
-func (t *Tree) getBalancedFactor() (bf byte) {
-	r := t.Left.getHigh() - t.Right.getHigh()
-	if r < 0 {
-		return byte(-1 * r)
+// getBalancedFactor
+//   t.Left.getHigh() - t.Right.getHigh()
+func (t *Tree) getBalancedFactor() (bf int) {
+	if t == nil {
+		return 0
 	}
-	return byte(r)
+	return t.Left.getHigh() - t.Right.getHigh()
 }
 func (t *Tree) rightRotation() (r *Tree) {
 	newRoot := t.Left
 	t.Left = newRoot.Right
 	newRoot.Right = t
 
-	t.High = maxN(t.Left.getHigh(), t.Right.getHigh()) + 1
-	newRoot.High = maxN(newRoot.Left.getHigh(), newRoot.Right.getHigh()) + 1
+	t.refreshHigh()
+	newRoot.refreshHigh()
 	return newRoot
 }
 func (t *Tree) leftRotation() (r *Tree) {
@@ -90,8 +131,8 @@ func (t *Tree) leftRotation() (r *Tree) {
 	t.Right = newRoot.Left
 	newRoot.Left = t
 
-	t.High = maxN(t.Left.getHigh(), t.Right.getHigh()) + 1
-	newRoot.High = maxN(newRoot.Left.getHigh(), newRoot.Right.getHigh()) + 1
+	t.refreshHigh()
+	newRoot.refreshHigh()
 	return newRoot
 }
 func (t *Tree) getHigh() (h int) {
@@ -99,6 +140,12 @@ func (t *Tree) getHigh() (h int) {
 		return -1
 	}
 	return t.High
+}
+func (t *Tree) refreshHigh() {
+	if t == nil {
+		return
+	}
+	t.High = maxN(t.Left.getHigh(), t.Right.getHigh()) + 1
 }
 func maxN(a, b int) (m int) {
 	if a >= b {
@@ -342,7 +389,7 @@ func (t *Tree) BFS() (n []int) {
 		val := queue.Front()
 		queue.Remove(val)
 
-		node := val.Value.(*Tree)
+		node, _ := val.Value.(*Tree)
 		n = append(n, node.Date)
 
 		//put child

@@ -134,7 +134,7 @@ func (t *Tree) BFS() (n []int) {
 		val := queue.Front()
 		queue.Remove(val)
 
-		node := val.Value.(*Tree)
+		node,_ := val.Value.(*Tree)
 		n = append(n, node.Date)
 
 		//put child

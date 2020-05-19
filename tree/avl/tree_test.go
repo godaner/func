@@ -206,7 +206,7 @@ func TestTree_BFS(t *testing.T) {
 	}{
 		{
 			preSrc:   []int{0, -1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaRes: []int{3 ,0, 7 ,-1, 2, 5, 8, 4, 6, 9},
+			wannaRes: []int{3, 0, 7, -1, 2, 5, 8, 4, 6, 9},
 			comp:     c,
 		},
 	}
@@ -284,14 +284,18 @@ func TestTree_Rm(t *testing.T) {
 	}{
 		{
 			wannaRes: []int{50, 30, 20, 35, 34, 32, 40, 80, 75, 100},
-			wannaRm:  70,
-			preSrc:   []int{50, 30, 80, 20, 35, 34, 32, 40, 70, 75, 100},
+			wannaRm:  75,
+			preSrc:   []int{35, 30, 20, 34, 32, 75, 50, 40, 80, 100},
 			comp:     c,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := Build(testCase.preSrc)
-		tree = tree.Rm(testCase.wannaRm)
+		tree.Print()
+		tree = tree.Rm(20)
+		tree = tree.Rm(32)
+		tree = tree.Rm(30)
+		tree.Print()
 		actuallyRes := tree.Pre()
 		if c(testCase.wannaRes, actuallyRes) != 0 {
 			t.Fatalf("TestTree_Rm : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
