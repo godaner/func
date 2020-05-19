@@ -1,6 +1,7 @@
 package avl
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -283,19 +284,15 @@ func TestTree_Rm(t *testing.T) {
 		comp     compare
 	}{
 		{
-			wannaRes: []int{50, 30, 20, 35, 34, 32, 40, 80, 75, 100},
+			preSrc:   []int{50, 30, 20, 35, 34, 32, 40, 80, 75, 100},
+			wannaRes: []int{34, 30, 20, 32, 80, 40, 35, 50, 100},
 			wannaRm:  75,
-			preSrc:   []int{35, 30, 20, 34, 32, 75, 50, 40, 80, 100},
 			comp:     c,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := Build(testCase.preSrc)
-		tree.Print()
-		tree = tree.Rm(20)
-		tree = tree.Rm(32)
-		tree = tree.Rm(30)
-		tree.Print()
+		tree = tree.Rm(testCase.wannaRm)
 		actuallyRes := tree.Pre()
 		if c(testCase.wannaRes, actuallyRes) != 0 {
 			t.Fatalf("TestTree_Rm : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
