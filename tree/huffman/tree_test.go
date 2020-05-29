@@ -1,6 +1,7 @@
 package bst
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -103,6 +104,16 @@ func TestTree_Code(t *testing.T) {
 				},
 			},
 		},
+		{
+			find: 2,
+			code: "",
+			src: []WeightData{
+				{
+					Data:   2,
+					Weight: 56160,
+				},
+			},
+		},
 	}
 	for i, testCase := range testCases {
 		tree := Build(testCase.src...)
@@ -112,4 +123,39 @@ func TestTree_Code(t *testing.T) {
 			t.Fatalf("TestBuild : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, code, testCase.code)
 		}
 	}
+}
+func TestHuffman(t *testing.T) {
+	ss := "111223"
+	wds := huffmanKV(ss)
+	for k, v := range wds {
+		fmt.Println(k, " : ", v)
+	}
+}
+
+// 获取字符串中的编码
+func huffmanKV(src string) (codes map[string]string) {
+	wdMap := map[int]WeightData{}
+	for _, s := range src {
+		d := int(s)
+		r, ok := wdMap[d]
+		if !ok {
+			r = WeightData{
+				Data:   d,
+				Weight: 0,
+			}
+		}
+		r.Weight++
+		wdMap[d] = r
+	}
+	wds := []WeightData{}
+	for _, wd := range wdMap {
+		wds = append(wds, wd)
+	}
+	tree := Build(wds...)
+	//tree.Print()
+	codes = map[string]string{}
+	for _, wd := range wds {
+		codes[string(wd.Data)] = tree.Code(wd.Data)
+	}
+	return codes
 }
