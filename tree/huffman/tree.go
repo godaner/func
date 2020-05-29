@@ -13,9 +13,26 @@ type Tree struct {
 	Weight      int64
 }
 
-
 func (t *Tree) Code(data int) (code string) {
-	panic("implement me")
+	return t.code(data, "")
+}
+
+func (t *Tree) code(data int, c string) string {
+	if t == nil {
+		return ""
+	}
+	if t.Data == data {
+		return c
+	}
+	r := t.Left.code(data, c+"0")
+	if r != "" {
+		return r
+	}
+	r = t.Right.code(data, c+"1")
+	if r != "" {
+		return r
+	}
+	return ""
 }
 
 type WeightData struct {
@@ -24,7 +41,7 @@ type WeightData struct {
 }
 
 // Build
-func Build(datas ...WeightData) (t tree.Tree) {
+func Build(datas ...WeightData) (t tree.HuffmanTree) {
 	if len(datas) <= 0 {
 		return
 	}
@@ -41,8 +58,8 @@ func Build(datas ...WeightData) (t tree.Tree) {
 	return build(nodes)
 }
 
-func build(nodes []*Tree) (t tree.Tree) {
-	var min1,min2 *Tree
+func build(nodes []*Tree) (t tree.HuffmanTree) {
+	var min1, min2 *Tree
 	for len(nodes) > 1 {
 		min1, nodes = pickMin(nodes)
 		min2, nodes = pickMin(nodes)
@@ -133,7 +150,7 @@ func fill(root *Tree, ans *[][]string, h, l, r int) {
 		return
 	}
 	mid := (l + r) / 2
-	(*ans)[h][mid] = fmt.Sprint(root.Data,"/",root.Weight)
+	(*ans)[h][mid] = fmt.Sprint(root.Data, "/", root.Weight)
 	fill(root.Left, ans, h+1, l, mid-1)
 	fill(root.Right, ans, h+1, mid+1, r)
 }
@@ -172,7 +189,7 @@ func (t *Tree) Compare(tar tree.Tree) (res int) {
 	if t.Weight == tar.(*Tree).Weight {
 		return tree.TREE_COMPARE_SAME
 	}
-	if t.Weight  > tar.(*Tree).Weight {
+	if t.Weight > tar.(*Tree).Weight {
 		return tree.TREE_COMPARE_G
 	}
 	return tree.TREE_COMPARE_L
