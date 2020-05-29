@@ -129,7 +129,7 @@ func TestTree_Max(t *testing.T) {
 		if node == nil {
 			t.Fatalf("TestTree_Max : testCase[%v] fail , res is : nil !", i)
 		}
-		actuallyRes := node.Data()
+		actuallyRes := node.Elem()
 		if testCase.wannaRes != actuallyRes {
 			t.Fatalf("TestTree_Max : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
@@ -154,7 +154,7 @@ func TestTree_Min(t *testing.T) {
 		if node == nil {
 			t.Fatalf("TestTree_Min : testCase[%v] fail , res is : nil !", i)
 		}
-		actuallyRes := node.Data()
+		actuallyRes := node.Elem()
 		if testCase.wannaRes != actuallyRes {
 			t.Fatalf("TestTree_Min : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
@@ -165,24 +165,24 @@ func TestTree_Find(t *testing.T) {
 	testCases := []struct {
 		preSrc        []*int
 		exits         bool
-		wannaFindDate int
+		wannaFindData int
 	}{
 		{
 			preSrc:        []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
-			wannaFindDate: 8,
+			wannaFindData: 8,
 			exits:         true,
 		},
 		{
 			preSrc:        []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
-			wannaFindDate: -1,
+			wannaFindData: -1,
 			exits:         false,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := BuildFromPre(testCase.preSrc)
-		node := tree.Find(testCase.wannaFindDate)
+		node := tree.Find(testCase.wannaFindData)
 		actuallyRes := node != nil
-		if testCase.exits != actuallyRes && testCase.wannaFindDate == node.Data() {
+		if testCase.exits != actuallyRes && testCase.wannaFindData == node.Elem() {
 			t.Fatalf("TestTree_Find : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.exits)
 		}
 	}
@@ -191,22 +191,22 @@ func TestTree_FindParent(t *testing.T) {
 	testCases := []struct {
 		preSrc        []*int
 		exits         bool
-		wannaFindDate int
+		wannaFindData int
 	}{
 		{
 			preSrc:        []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
-			wannaFindDate: 8,
+			wannaFindData: 8,
 			exits:         true,
 		},
 		{
 			preSrc:        []*int{intP(0), intP(1), intP(3), intP(7), nil, nil, intP(8), nil, nil, intP(4), nil, nil, intP(2), intP(5), nil, intP(9), nil, nil, intP(6), nil, nil},
-			wannaFindDate: 0,
+			wannaFindData: 0,
 			exits:         false,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := BuildFromPre(testCase.preSrc)
-		node := tree.FindParent(testCase.wannaFindDate)
+		node := tree.FindParent(testCase.wannaFindData)
 		actuallyRes := node != nil
 		if testCase.exits != actuallyRes {
 			t.Fatalf("TestTree_FindParent : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.exits)

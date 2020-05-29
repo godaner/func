@@ -8,7 +8,7 @@ const (
 
 // Tree
 type Tree interface {
-	Data() (data int)
+	Elem() (data int)
 	Width() (w int)
 	Compare(tar Tree) (res int)
 	Find(data int) (r Tree)
@@ -24,16 +24,13 @@ type Tree interface {
 	BFS() (n []int)
 }
 
+// HuffmanTree
+type HuffmanTree interface {
+	Tree
+	Code(data int) (code string)
+}
+
 // Addable
 type Addable interface {
 	Add(data int) (tt Addable)
-}
-
-// WeightAddAble
-type Weight struct {
-	Data   int
-	Weight int64
-}
-type WeightAddAble interface {
-	Add(ws ...Weight) (tt WeightAddAble)
 }

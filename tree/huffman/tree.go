@@ -4,49 +4,89 @@ import (
 	"container/list"
 	"fmt"
 	"github.com/godaner/func/tree"
-	"strconv"
 )
 
 // Tree
 type Tree struct {
 	Left, Right *Tree
-	Date        int
+	Data        int
 	Weight      int64
 }
 
-func (t *Tree) Add(ws ...tree.Weight) (tt tree.WeightAddAble) {
-	return nil
+
+func (t *Tree) Code(data int) (code string) {
+	panic("implement me")
 }
 
-// Rm
-/*删除元素
-*1、如果被删除结点只有一个子结点，就直接将A的子结点连至A的父结点上，并将A删除
-*2、如果被删除结点有两个子结点，将该结点右子数内的最小结点取代A。
- */
-func (t *Tree) Rm(data int) (tt tree.Tree) {
-
-	return t.rm(data)
+type WeightData struct {
+	Data   int
+	Weight int64
 }
-func (t *Tree) rm(data int) (tt *Tree) {
-	if t == nil {
-		return t
+
+// Build
+func Build(datas ...WeightData) (t tree.Tree) {
+	if len(datas) <= 0 {
+		return
 	}
-	compare := data - t.Data()
-	if compare < 0 {
-		t.Left = t.Left.rm(data)
-	} else if compare > 0 {
-		t.Right = t.Right.rm(data)
-	} else { //找到结点,删除结点
-		if t.Left != nil && t.Right != nil {
-			t.Date = t.Right.Min().Data()
-			t.Right = t.Right.rm(t.Data())
-		} else if t.Left != nil {
-			t = t.Left
-		} else {
-			t = t.Right
+	// to nodes
+	nodes := []*Tree{}
+	for _, d := range datas {
+		nodes = append(nodes, &Tree{
+			Left:   nil,
+			Right:  nil,
+			Data:   d.Data,
+			Weight: d.Weight,
+		})
+	}
+	return build(nodes)
+}
+
+func build(nodes []*Tree) (t tree.Tree) {
+	var min1,min2 *Tree
+	for len(nodes) > 1 {
+		min1, nodes = pickMin(nodes)
+		min2, nodes = pickMin(nodes)
+		nodes = append(nodes, &Tree{
+			Left:   min1,
+			Right:  min2,
+			Data:   0,
+			Weight: min1.Weight + min2.Weight,
+		})
+	}
+	if len(nodes) == 0 {
+		return nil
+	}
+	return nodes[0]
+}
+
+// pickMin
+func pickMin(nodes []*Tree) (minNode *Tree, resNodes []*Tree) {
+	if len(nodes) == 0 {
+		return nil, nil
+	}
+
+	minIndex := 0
+	minNode = nodes[0]
+	for index, node := range nodes {
+		if minNode.Compare(node) > 0 {
+			minNode = node
+			minIndex = index
 		}
 	}
-	return t
+	resNodes = []*Tree{}
+	for index, node := range nodes {
+		if index != minIndex {
+			resNodes = append(resNodes, node)
+		}
+	}
+	return minNode, resNodes
+}
+
+func (t *Tree) Width() (w int) {
+	// 计算输出数组的规模
+	h := uint(t.Depth() + 1)
+	// 宽度（最底层的宽度）， 2^n - 1
+	return (1 << h) - 1
 }
 
 func (t *Tree) Print() {
@@ -93,39 +133,84 @@ func fill(root *Tree, ans *[][]string, h, l, r int) {
 		return
 	}
 	mid := (l + r) / 2
-	(*ans)[h][mid] = strconv.Itoa(root.Date)
+	(*ans)[h][mid] = fmt.Sprint(root.Data,"/",root.Weight)
 	fill(root.Left, ans, h+1, l, mid-1)
 	fill(root.Right, ans, h+1, mid+1, r)
 }
 
-func (t *Tree) Data() (data int) {
+func (t *Tree) Rm(data int) (tt tree.Tree) {
 	if t == nil {
-		return 0
+		return nil
 	}
-	return t.Date
-}
-
-func (t *Tree) Width() (w int) {
-	// 计算输出数组的规模
-	h := uint(t.Depth() + 1)
-	// 宽度（最底层的宽度）， 2^n - 1
-	return (1 << h) - 1
-}
-func maxN(a, b int) (m int) {
-	if a >= b {
-		return a
+	if t.Data == data {
+		return nil
 	}
-	return b
+	rm(t, data)
+	return t
+}
+func rm(root *Tree, data int) {
+	// rec
+	if root.Left != nil {
+		if root.Left.Data == data {
+			root.Left = nil
+			return
+		} else {
+			rm(root.Left, data)
+		}
+	}
+	if root.Right != nil {
+		if root.Right.Data == data {
+			root.Right = nil
+			return
+		} else {
+			rm(root.Right, data)
+		}
+	}
 }
 
 func (t *Tree) Compare(tar tree.Tree) (res int) {
-	if t == tar {
+	if t.Weight == tar.(*Tree).Weight {
 		return tree.TREE_COMPARE_SAME
 	}
-	if t.Data() == tar.Data() {
-		return tree.TREE_COMPARE_SAME
+	if t.Weight  > tar.(*Tree).Weight {
+		return tree.TREE_COMPARE_G
 	}
 	return tree.TREE_COMPARE_L
+}
+
+// Data
+func (t *Tree) Elem() (data int) {
+	if t == nil {
+		return 0
+	}
+	return t.Data
+}
+
+// BFS
+//  广度优先遍历
+func (t *Tree) BFS() (n []int) {
+	if t == nil {
+		return
+	}
+	queue := list.New()
+	queue.PushBack(t)
+	for queue.Len() > 0 {
+		// get father
+		val := queue.Front()
+		queue.Remove(val)
+
+		node, _ := val.Value.(*Tree)
+		n = append(n, node.Data)
+
+		//put child
+		if node.Left != nil {
+			queue.PushBack(node.Left)
+		}
+		if node.Right != nil {
+			queue.PushBack(node.Right)
+		}
+	}
+	return n
 }
 
 // Depth
@@ -139,65 +224,16 @@ func depth(root *Tree, curDep int) (dep int) {
 		return curDep
 	}
 	curDep++
-	return max(depth(root.Left, curDep), depth(root.Right, curDep))
+	return maxN(depth(root.Left, curDep), depth(root.Right, curDep))
 }
-func max(a, b int) (m int) {
+func maxN(a, b int) (m int) {
 	if a >= b {
 		return a
 	}
 	return b
 }
-func (t *Tree) Min() (r tree.Tree) {
-	if t == nil {
-		return nil
-	}
-	min := t
-	for {
-		if min.Left == nil {
-			return min
-		}
-		min = min.Left
-	}
-}
 
-func (t *Tree) Max() (r tree.Tree) {
-	if t == nil {
-		return nil
-	}
-	max := t
-	for {
-		if max.Right == nil {
-			return max
-		}
-		max = max.Right
-	}
-}
-
-func (t *Tree) BFS() (n []int) {
-	if t == nil {
-		return
-	}
-	queue := list.New()
-	queue.PushBack(t)
-	for queue.Len() > 0 {
-		// get father
-		val := queue.Front()
-		queue.Remove(val)
-
-		node, _ := val.Value.(*Tree)
-		n = append(n, node.Date)
-
-		//put child
-		if node.Left != nil {
-			queue.PushBack(node.Left)
-		}
-		if node.Right != nil {
-			queue.PushBack(node.Right)
-		}
-	}
-	return n
-}
-
+// Find
 func (t *Tree) FindParent(data int) (r tree.Tree) {
 	return findParent(t, data)
 }
@@ -207,101 +243,92 @@ func findParent(root *Tree, data int) (r tree.Tree) {
 	if root == nil {
 		return nil
 	}
-	if root.Left != nil && root.Left.Date == data {
+	if root.Left != nil && root.Left.Data == data {
 		return root
 	}
-	if root.Right != nil && root.Right.Date == data {
+	if root.Right != nil && root.Right.Data == data {
 		return root
 	}
-	if data <= root.Date {
-		lr := findParent(root.Left, data)
-		if lr != nil {
-			return lr
-		}
-	} else {
-		rr := findParent(root.Right, data)
-		if rr != nil {
-			return rr
-		}
+	lr := findParent(root.Left, data)
+	if lr != nil {
+		return lr
+	}
+	rr := findParent(root.Right, data)
+	if rr != nil {
+		return rr
 	}
 	return nil
 }
 
 // Find
 func (t *Tree) Find(data int) (r tree.Tree) {
-
 	return find(t, data)
 }
+
+// find
 func find(root *Tree, data int) (r tree.Tree) {
 	if root == nil {
-		return
+		return nil
 	}
-	if data == root.Date {
+	if root.Data == data {
 		return root
 	}
-	if data <= root.Date {
-		r := find(root.Left, data)
-		if r != nil {
-			return r
-		}
-	} else {
-		r := find(root.Right, data)
-		if r != nil {
-			return r
-		}
+
+	lr := find(root.Left, data)
+	if lr != nil {
+		return lr
+	}
+	rr := find(root.Right, data)
+	if rr != nil {
+		return rr
 	}
 	return nil
 }
 
-
-
-// add
-func add(curt *Tree, data int) {
-	// Left
-	if data <= curt.Date {
-		if curt.Left == nil {
-			curt.Left = newTreeNode(data)
-			return
-		}
-		add(curt.Left, data)
-		return
-	}
-	// Right
-	if curt.Right == nil {
-		curt.Right = newTreeNode(data)
-		return
-	}
-	add(curt.Right, data)
+// Min
+func (t *Tree) Min() (r tree.Tree) {
+	return min(t)
 }
 
-
-func (t *Tree) AddWithWeight(dataAndWeights ...*DataAndWeight) (tt tree.Tree) {
-	if t == nil {
+// min
+func min(root *Tree) (r tree.Tree) {
+	if root == nil {
 		return
 	}
-
-	return
+	var minN tree.Tree
+	minN = root
+	lc := min(root.Left)
+	if lc != nil && lc.Elem() < minN.Elem() {
+		minN = lc
+	}
+	rc := min(root.Right)
+	if rc != nil && rc.Elem() < minN.Elem() {
+		minN = rc
+	}
+	return minN
 }
-// Build
-func Build(datas []int) (t tree.Tree) {
-	if len(datas) <= 0 {
+
+// Max
+func (t *Tree) Max() (r tree.Tree) {
+	return max(t)
+}
+
+// max
+func max(root *Tree) (r tree.Tree) {
+	if root == nil {
 		return
 	}
-	var root tree.Tree
-	root = newTreeNode(datas[0])
-	for i := 1; i < len(datas); i++ {
-		root = root.Add(datas[i])
+	var maxN tree.Tree
+	maxN = root
+	lc := max(root.Left)
+	if lc != nil && lc.Elem() > maxN.Elem() {
+		maxN = lc
 	}
-	return root
-}
-
-// newTreeNode
-func newTreeNode(data int) (tn *Tree) {
-	return &Tree{
-		Left:  nil,
-		Right: nil,
-		Date:  data,
+	rc := max(root.Right)
+	if rc != nil && rc.Elem() > maxN.Elem() {
+		maxN = rc
 	}
+	return maxN
 }
 
 // Pre
@@ -316,7 +343,7 @@ func pre(root *Tree, p *[]int) {
 	if root == nil {
 		return
 	}
-	*p = append(*p, root.Date)
+	*p = append(*p, root.Data)
 	pre(root.Left, p)
 	pre(root.Right, p)
 
@@ -335,7 +362,7 @@ func mid(root *Tree, m *[]int) {
 		return
 	}
 	mid(root.Left, m)
-	*m = append(*m, root.Date)
+	*m = append(*m, root.Data)
 	mid(root.Right, m)
 
 }
@@ -354,6 +381,69 @@ func post(root *Tree, p *[]int) {
 	}
 	post(root.Left, p)
 	post(root.Right, p)
-	*p = append(*p, root.Date)
+	*p = append(*p, root.Data)
 
+}
+
+// BuildFromPreMid
+//  通过先序中序遍历建立二叉树
+//  pre  [0 1 3 7 8 4 2 5 9 6]
+//  mid  [7 3 8 1 4 0 5 9 2 6]
+//  post [7 8 3 4 1 9 5 6 2 0]
+func BuildFromPreMid(pre []int, mid []int) (t *Tree) {
+	if len(pre) == 0 || len(mid) == 0 {
+		return nil
+	}
+	d := pre[0]
+	dp := pos(mid, d)
+	root := newTreeNode(d)
+	root.Left = BuildFromPreMid(pre[1:dp+1], mid[:dp])
+	root.Right = BuildFromPreMid(pre[dp+1:], mid[dp+1:])
+	return root
+}
+
+// pos
+func pos(nums []int, num int) (p int) {
+	for index, n := range nums {
+		if num == n {
+			return index
+		}
+	}
+	return p
+}
+
+// BuildFromPre
+//  通过前序遍历建立二叉树
+//  ABDH##I##E##CF#J##G##
+func BuildFromPre(nodes []*int) (t *Tree) {
+	i := -1 // 第几次输入
+	return buildFromPre(nodes, &i)
+}
+
+// buildFromPre
+//  nodes　总的输入
+//  i　第几次输入
+func buildFromPre(nodes []*int, i *int) (t *Tree) {
+	l := len(nodes)
+	if l == 0 || l < *i {
+		return nil
+	}
+	*i = (*i) + 1
+	data := nodes[*i]
+	if data == nil {
+		return nil
+	}
+	node := newTreeNode(*data)
+	node.Left = buildFromPre(nodes, i)
+	node.Right = buildFromPre(nodes, i)
+	return node
+}
+
+// newTreeNode
+func newTreeNode(data int) (tn *Tree) {
+	return &Tree{
+		Left:  nil,
+		Right: nil,
+		Data:  data,
+	}
 }

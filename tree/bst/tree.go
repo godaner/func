@@ -10,7 +10,7 @@ import (
 // Tree
 type Tree struct {
 	Left, Right *Tree
-	Date        int
+	Data        int
 }
 
 // Rm
@@ -26,15 +26,15 @@ func (t *Tree) rm(data int) (tt *Tree) {
 	if t == nil {
 		return t
 	}
-	compare := data - t.Data()
+	compare := data - t.Elem()
 	if compare < 0 {
 		t.Left = t.Left.rm(data)
 	} else if compare > 0 {
 		t.Right = t.Right.rm(data)
 	} else { //找到结点,删除结点
 		if t.Left != nil && t.Right != nil {
-			t.Date = t.Right.Min().Data()
-			t.Right = t.Right.rm(t.Data())
+			t.Data = t.Right.Min().Elem()
+			t.Right = t.Right.rm(t.Elem())
 		} else if t.Left != nil {
 			t = t.Left
 		} else {
@@ -88,16 +88,16 @@ func fill(root *Tree, ans *[][]string, h, l, r int) {
 		return
 	}
 	mid := (l + r) / 2
-	(*ans)[h][mid] = strconv.Itoa(root.Date)
+	(*ans)[h][mid] = strconv.Itoa(root.Data)
 	fill(root.Left, ans, h+1, l, mid-1)
 	fill(root.Right, ans, h+1, mid+1, r)
 }
 
-func (t *Tree) Data() (data int) {
+func (t *Tree) Elem() (data int) {
 	if t == nil {
 		return 0
 	}
-	return t.Date
+	return t.Data
 }
 
 func (t *Tree) Width() (w int) {
@@ -117,8 +117,8 @@ func (t *Tree) Compare(tar tree.Tree) (res int) {
 	if t == tar {
 		return tree.TREE_COMPARE_SAME
 	}
-	if t.Data() == tar.Data() {
-		return tree.TREE_COMPARE_SAME
+	if t.Elem() > tar.Elem() {
+		return tree.TREE_COMPARE_G
 	}
 	return tree.TREE_COMPARE_L
 }
@@ -179,8 +179,8 @@ func (t *Tree) BFS() (n []int) {
 		val := queue.Front()
 		queue.Remove(val)
 
-		node,_ := val.Value.(*Tree)
-		n = append(n, node.Date)
+		node, _ := val.Value.(*Tree)
+		n = append(n, node.Data)
 
 		//put child
 		if node.Left != nil {
@@ -202,13 +202,13 @@ func findParent(root *Tree, data int) (r tree.Tree) {
 	if root == nil {
 		return nil
 	}
-	if root.Left != nil && root.Left.Date == data {
+	if root.Left != nil && root.Left.Data == data {
 		return root
 	}
-	if root.Right != nil && root.Right.Date == data {
+	if root.Right != nil && root.Right.Data == data {
 		return root
 	}
-	if data <= root.Date {
+	if data <= root.Data {
 		lr := findParent(root.Left, data)
 		if lr != nil {
 			return lr
@@ -231,10 +231,10 @@ func find(root *Tree, data int) (r tree.Tree) {
 	if root == nil {
 		return
 	}
-	if data == root.Date {
+	if data == root.Data {
 		return root
 	}
-	if data <= root.Date {
+	if data <= root.Data {
 		r := find(root.Left, data)
 		if r != nil {
 			return r
@@ -260,7 +260,7 @@ func (t *Tree) Add(data int) (tt tree.Addable) {
 // add
 func add(curt *Tree, data int) {
 	// Left
-	if data <= curt.Date {
+	if data <= curt.Data {
 		if curt.Left == nil {
 			curt.Left = newTreeNode(data)
 			return
@@ -284,7 +284,7 @@ func Build(datas []int) (t tree.Tree) {
 	var root tree.Addable
 	root = newTreeNode(datas[0])
 	for i := 1; i < len(datas); i++ {
-		root=root.Add(datas[i])
+		root = root.Add(datas[i])
 	}
 	return root.(tree.Tree)
 }
@@ -294,7 +294,7 @@ func newTreeNode(data int) (tn *Tree) {
 	return &Tree{
 		Left:  nil,
 		Right: nil,
-		Date:  data,
+		Data:  data,
 	}
 }
 
@@ -310,7 +310,7 @@ func pre(root *Tree, p *[]int) {
 	if root == nil {
 		return
 	}
-	*p = append(*p, root.Date)
+	*p = append(*p, root.Data)
 	pre(root.Left, p)
 	pre(root.Right, p)
 
@@ -329,7 +329,7 @@ func mid(root *Tree, m *[]int) {
 		return
 	}
 	mid(root.Left, m)
-	*m = append(*m, root.Date)
+	*m = append(*m, root.Data)
 	mid(root.Right, m)
 
 }
@@ -348,6 +348,6 @@ func post(root *Tree, p *[]int) {
 	}
 	post(root.Left, p)
 	post(root.Right, p)
-	*p = append(*p, root.Date)
+	*p = append(*p, root.Data)
 
 }

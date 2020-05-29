@@ -58,24 +58,24 @@ func TestTree_Find(t *testing.T) {
 	testCases := []struct {
 		src           []int
 		exits         bool
-		wannaFindDate int
+		wannaFindData int
 	}{
 		{
 			src:           []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaFindDate: 8,
+			wannaFindData: 8,
 			exits:         true,
 		},
 		{
 			src:           []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaFindDate: -1,
+			wannaFindData: -1,
 			exits:         false,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := Build(testCase.src)
-		node := tree.Find(testCase.wannaFindDate)
+		node := tree.Find(testCase.wannaFindData)
 		actuallyRes := node != nil
-		if testCase.exits != actuallyRes && testCase.wannaFindDate == node.Data() {
+		if testCase.exits != actuallyRes && testCase.wannaFindData == node.Elem() {
 			t.Fatalf("TestTree_Find : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.exits)
 		}
 	}
@@ -86,22 +86,22 @@ func TestTree_FindParent(t *testing.T) {
 	testCases := []struct {
 		src           []int
 		exits         bool
-		wannaFindDate int
+		wannaFindData int
 	}{
 		{
 			src:           []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaFindDate: 8,
+			wannaFindData: 8,
 			exits:         true,
 		},
 		{
 			src:           []int{0, 1, 3, 7, 8, 4, 2, 5, 9, 6},
-			wannaFindDate: 0,
+			wannaFindData: 0,
 			exits:         false,
 		},
 	}
 	for i, testCase := range testCases {
 		tree := Build(testCase.src)
-		node := tree.FindParent(testCase.wannaFindDate)
+		node := tree.FindParent(testCase.wannaFindData)
 		actuallyRes := node != nil
 		if testCase.exits != actuallyRes {
 			t.Fatalf("TestTree_FindParent : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.exits)
@@ -155,7 +155,7 @@ func TestTree_Max(t *testing.T) {
 		if node == nil {
 			t.Fatalf("TestTree_Max : testCase[%v] fail , res is : nil !", i)
 		}
-		actuallyRes := node.Data()
+		actuallyRes := node.Elem()
 		if testCase.wannaRes != actuallyRes {
 			t.Fatalf("TestTree_Max : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
@@ -178,7 +178,7 @@ func TestTree_Min(t *testing.T) {
 		if node == nil {
 			t.Fatalf("TestTree_Min : testCase[%v] fail , res is : nil !", i)
 		}
-		actuallyRes := node.Data()
+		actuallyRes := node.Elem()
 		if testCase.wannaRes != actuallyRes {
 			t.Fatalf("TestTree_Min : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, actuallyRes, testCase.wannaRes)
 		}
