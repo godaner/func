@@ -6,6 +6,7 @@ const (
 	TREE_COMPARE_G    = 1
 )
 
+// Tree
 type Tree interface {
 	Data() (data int)
 	Width() (w int)
@@ -14,7 +15,6 @@ type Tree interface {
 	FindParent(data int) (r Tree)
 	Depth() (dep int)
 	Rm(data int) (tt Tree)
-	Add(data int) (tt Tree)
 	Print()
 	Min() (r Tree)
 	Max() (r Tree)
@@ -22,4 +22,18 @@ type Tree interface {
 	Mid() (m []int)
 	Post() (p []int)
 	BFS() (n []int)
+}
+
+// Addable
+type Addable interface {
+	Add(data int) (tt Addable)
+}
+
+// WeightAddAble
+type Weight struct {
+	Data   int
+	Weight int64
+}
+type WeightAddAble interface {
+	Add(ws ...Weight) (tt WeightAddAble)
 }

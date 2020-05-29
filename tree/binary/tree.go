@@ -13,9 +13,6 @@ type Tree struct {
 	Date        int
 }
 
-func (t *Tree) Add(data int) (tt tree.Tree) {
-	panic("implement me")
-}
 
 func (t *Tree) Width() (w int) {
 	// 计算输出数组的规模

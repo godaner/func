@@ -18,16 +18,16 @@ func Build(datas []int) (t tree.Tree) {
 	if len(datas) <= 0 {
 		return
 	}
-	var root tree.Tree
+	var root tree.Addable
 	root = newTreeNode(datas[0])
 	for i := 1; i < len(datas); i++ {
 		root = root.Add(datas[i])
 	}
-	return root
+	return root.(tree.Tree)
 }
 
 // newTreeNode
-func newTreeNode(data int) (tn *Tree) {
+func newTreeNode(data int) (tn tree.Addable) {
 	return &Tree{
 		Left:  nil,
 		Right: nil,
@@ -79,7 +79,7 @@ func (t *Tree) Rm(data int) (tt tree.Tree) {
 	return t
 }
 
-func (t *Tree) Add(data int) (tt tree.Tree) {
+func (t *Tree) Add(data int) (tt tree.Addable) {
 	if t == nil {
 		return newTreeNode(data)
 	}

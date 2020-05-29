@@ -11,6 +11,11 @@ import (
 type Tree struct {
 	Left, Right *Tree
 	Date        int
+	Weight      int64
+}
+
+func (t *Tree) Add(ws ...tree.Weight) (tt tree.WeightAddAble) {
+	return nil
 }
 
 // Rm
@@ -179,7 +184,7 @@ func (t *Tree) BFS() (n []int) {
 		val := queue.Front()
 		queue.Remove(val)
 
-		node,_ := val.Value.(*Tree)
+		node, _ := val.Value.(*Tree)
 		n = append(n, node.Date)
 
 		//put child
@@ -248,14 +253,7 @@ func find(root *Tree, data int) (r tree.Tree) {
 	return nil
 }
 
-// Add
-func (t *Tree) Add(data int) (tt tree.Tree) {
-	if t == nil {
-		return
-	}
-	add(t, data)
-	return t
-}
+
 
 // add
 func add(curt *Tree, data int) {
@@ -276,6 +274,14 @@ func add(curt *Tree, data int) {
 	add(curt.Right, data)
 }
 
+
+func (t *Tree) AddWithWeight(dataAndWeights ...*DataAndWeight) (tt tree.Tree) {
+	if t == nil {
+		return
+	}
+
+	return
+}
 // Build
 func Build(datas []int) (t tree.Tree) {
 	if len(datas) <= 0 {
@@ -284,7 +290,7 @@ func Build(datas []int) (t tree.Tree) {
 	var root tree.Tree
 	root = newTreeNode(datas[0])
 	for i := 1; i < len(datas); i++ {
-		root=root.Add(datas[i])
+		root = root.Add(datas[i])
 	}
 	return root
 }
