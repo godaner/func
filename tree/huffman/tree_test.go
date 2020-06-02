@@ -1,8 +1,6 @@
 package bst
 
 import (
-	"fmt"
-	"io/ioutil"
 	"testing"
 )
 
@@ -121,59 +119,59 @@ func TestTree_Code(t *testing.T) {
 		//tree.Print()
 		code := tree.Code(testCase.find)
 		if code != testCase.code {
-			t.Fatalf("TestBuild : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, code, testCase.code)
+			t.Fatalf("TestTree_Code : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, code, testCase.code)
 		}
 	}
 }
-func TestHuffman(t *testing.T) {
-	ss := "111223"
-	wds := huffmanKV(ss)
-	for k, v := range wds {
-		fmt.Println(k, " : ", v)
+func TestTree_Codes(t *testing.T) {
+	testCases := []struct {
+		src   []WeightData
+		codes map[int]string
+	}{
+		{
+			codes: map[int]string{
+				1: "1",
+				2: "01",
+				3: "00",
+			},
+			src: []WeightData{
+				{
+					Data:   1,
+					Weight: 3,
+				},
+				{
+					Data:   2,
+					Weight: 2,
+				},
+				{
+					Data:   3,
+					Weight: 1,
+				},
+			},
+		},
 	}
-	b, err := ioutil.ReadFile("/home/godaner/config.json") // just pass the file name
-	//b, err := ioutil.ReadFile("/usr/local/bin/protoc") // just pass the file name
-	if err != nil {
-		fmt.Print(err)
+	for i, testCase := range testCases {
+		tree := Build(testCase.src...)
+		//tree.Print()
+		codes := tree.Codes()
+		if !sameCodes(testCase.codes, codes) {
+			t.Fatalf("TestTree_Codes : testCase[%v] fail , actually res is : %v , wanna res is : %v !", i, codes, testCase.codes)
+		}
 	}
-
-	str := string(b) // convert content to a 'string'
-	fmt.Println(str,len(str))
-	wds = huffmanKV(str)
-	for k, v := range wds {
-		fmt.Println(k, " : ", v)
-	}
-	huffmanS:=""
-	for index, _ := range str {
-		huffmanS+=wds[string(str[index])]
-	}
-	fmt.Println(huffmanS,len(huffmanS))
 }
 
-// 获取字符串中的编码
-func huffmanKV(src string) (codes map[string]string) {
-	wdMap := map[int]WeightData{}
-	for _, s := range src {
-		d := int(s)
-		r, ok := wdMap[d]
+func sameCodes(cs1 map[int]string, cs2 map[int]string) (b bool) {
+	if len(cs1) != len(cs2) {
+		return false
+	}
+	for k1, v1 := range cs1 {
+		v2, ok := cs2[k1]
 		if !ok {
-			r = WeightData{
-				Data:   d,
-				Weight: 0,
-			}
+			return false
 		}
-		r.Weight++
-		wdMap[d] = r
+		if v2 != v1 {
+			return false
+		}
 	}
-	wds := []WeightData{}
-	for _, wd := range wdMap {
-		wds = append(wds, wd)
-	}
-	tree := Build(wds...)
-	//tree.Print()
-	codes = map[string]string{}
-	for _, wd := range wds {
-		codes[string(wd.Data)] = tree.Code(wd.Data)
-	}
-	return codes
+	return true
 }

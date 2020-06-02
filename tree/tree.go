@@ -28,6 +28,7 @@ type Tree interface {
 type HuffmanTree interface {
 	Tree
 	Code(data int) (code string)
+	Codes() (cs map[int]string)
 }
 
 // Addable

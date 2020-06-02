@@ -13,6 +13,23 @@ type Tree struct {
 	Weight      int64
 }
 
+func (t *Tree) Codes() (cs map[int]string) {
+	cs = map[int]string{}
+	t.codes("", &cs)
+	return cs
+}
+
+func (t *Tree) codes(code string, cs *map[int]string) {
+	if t == nil {
+		return
+	}
+	if t.Data != 0 {
+		(*cs)[t.Data] = code
+	}
+	t.Left.codes(code+"0", cs)
+	t.Right.codes(code+"1", cs)
+}
+
 func (t *Tree) Code(data int) (code string) {
 	return t.code(data, "")
 }
