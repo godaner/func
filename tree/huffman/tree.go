@@ -6,6 +6,10 @@ import (
 	"github.com/godaner/func/tree"
 )
 
+const (
+	nilNodeData = -1
+)
+
 // Tree
 type Tree struct {
 	Left, Right *Tree
@@ -23,7 +27,7 @@ func (t *Tree) codes(code string, cs *map[int]string) {
 	if t == nil {
 		return
 	}
-	if t.Data != 0 {
+	if t.Data != nilNodeData {
 		(*cs)[t.Data] = code
 	}
 	t.Left.codes(code+"0", cs)
@@ -83,7 +87,7 @@ func build(nodes []*Tree) (t tree.HuffmanTree) {
 		nodes = append(nodes, &Tree{
 			Left:   min1,
 			Right:  min2,
-			Data:   0,
+			Data:   nilNodeData,
 			Weight: min1.Weight + min2.Weight,
 		})
 	}
