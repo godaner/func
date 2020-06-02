@@ -2,6 +2,7 @@ package bst
 
 import (
 	"fmt"
+	"io/ioutil"
 	"testing"
 )
 
@@ -130,6 +131,23 @@ func TestHuffman(t *testing.T) {
 	for k, v := range wds {
 		fmt.Println(k, " : ", v)
 	}
+	b, err := ioutil.ReadFile("/home/godaner/config.json") // just pass the file name
+	//b, err := ioutil.ReadFile("/usr/local/bin/protoc") // just pass the file name
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	str := string(b) // convert content to a 'string'
+	fmt.Println(str,len(str))
+	wds = huffmanKV(str)
+	for k, v := range wds {
+		fmt.Println(k, " : ", v)
+	}
+	huffmanS:=""
+	for index, _ := range str {
+		huffmanS+=wds[string(str[index])]
+	}
+	fmt.Println(huffmanS,len(huffmanS))
 }
 
 // 获取字符串中的编码
